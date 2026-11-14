@@ -2,11 +2,11 @@
 """Rank CoStar kit properties by how complete a pre-incident plan we could build for them.
 
 Usage (from the repo root, with the data folder in place):
-    python3 scripts/find_hero_buildings.py            # top 25 overall
-    python3 scripts/find_hero_buildings.py --top 50 --non-apartment
+    python3 find_hero_buildings.py            # top 25 overall
+    python3 find_hero_buildings.py --top 50 --non-apartment
 
 Reads costar-hackathon-kit/data/*.jsonl with the standard library only.
-Writes scripts/out/hero_buildings.csv and prints the top of the list.
+Writes out/hero_buildings.csv and prints the top of the list.
 """
 import argparse
 import csv
@@ -14,7 +14,7 @@ import json
 import os
 from collections import defaultdict
 
-KIT = os.path.join(os.path.dirname(__file__), "..", "costar-hackathon-kit")
+KIT = os.path.join(os.path.dirname(__file__), "costar-hackathon-kit")
 DATA = os.path.join(KIT, "data")
 OUT = os.path.join(os.path.dirname(__file__), "out")
 
@@ -56,12 +56,7 @@ def year_built(p):
     return min(years) if years else None
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--top", type=int, default=25)
-    ap.add_argument("--non-apartment", action="store_true", help="skip Multifamily properties")
-    args = ap.parse_args()
-
+def rank_buildings(non_apartment=False):
     addresses = {}
     with open(os.path.join(KIT, "commercial-properties.csv")) as f:
         for r in csv.DictReader(f):
@@ -88,7 +83,7 @@ def main():
     rows = []
     for p in jsonl("commercial-property.jsonl"):
         ptype = PROPERTY_TYPE.get(str(p.get("propertyType")), str(p.get("propertyType")))
-        if args.non_apartment and "multi" in ptype.lower():
+        if non_apartment and "multi" in ptype.lower():
             continue
         atts = p.get("attachments") or []
         n_mp = sum(1 for a in atts if a.get("videoExternalReferenceType") in MATTERPORT_REF)
@@ -131,6 +126,15 @@ def main():
         })
 
     rows.sort(key=lambda r: -r["score"])
+    return rows
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--top", type=int, default=25)
+    ap.add_argument("--non-apartment", action="store_true", help="skip Multifamily properties")
+    args = ap.parse_args()
+    rows = rank_buildings(non_apartment=args.non_apartment)
     os.makedirs(OUT, exist_ok=True)
     path = os.path.join(OUT, "hero_buildings.csv")
     with open(path, "w", newline="") as f:
