@@ -29,7 +29,11 @@ export async function loadQuizFile(modelId) {
     const correctIndex = Math.max(0, shuffled.findIndex(o => o.rank === 'best'));
     return {
       id: q.id || `q${i + 1}`,
-      title: q.roomLabel || q.quizCategory || 'Checkpoint',
+      // checkpointLabel ("Checkpoint 3", or "Checkpoint 3 -- Bedroom") is an
+      // order-blind wayfinding name from the server -- see serve.py. It's
+      // what the native 3D marker shows AND what the debrief uses to name
+      // this checkpoint when comparing the trainee's order to the optimal one.
+      title: q.checkpointLabel || q.roomLabel || q.quizCategory || 'Checkpoint',
       type: 'Search',
       location: {
         matterportModelId: q.matterportModelId,

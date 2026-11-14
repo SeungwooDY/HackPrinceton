@@ -281,6 +281,11 @@ button:disabled { cursor: default; opacity: .5; }
 .debrief-stats div { background: #f1e9df; border-radius: 6px; padding: 10px; text-align: center; }
 .debrief-stats dt { color: #785b42; font-size: 12px; }
 .debrief-stats dd { margin: 4px 0 0; font-size: 16px; font-weight: 600; color: #433a32; }
+.debrief-order { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 16px; }
+.debrief-order h3 { margin: 0 0 6px; font-size: 13px; color: #785b42; }
+.debrief-order ol { margin: 0; padding-left: 20px; font-size: 13px; }
+.debrief-order li { margin: 2px 0; }
+.debrief-order .debrief-start { color: #785b42; font-style: italic; list-style: none; margin-left: -20px; }
 .debrief-note { color: #8b562c; background: #f7ead8; border-left: 2px solid #c3996c; padding: 8px 10px; font-size: 13px; margin: 0 0 16px; }
 .debrief-actions { display: flex; gap: 8px; }
 .debrief-actions button { flex: 1; padding: 10px; border: 1px solid #8b633e; background: #986b42; color: #fffdf8; border-radius: 4px; cursor: pointer; }
