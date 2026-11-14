@@ -5,11 +5,14 @@ export default function MatterportViewer({ modelId }) {
   const [status, setStatus] = useState('Loading viewer…');
   const [error, setError] = useState('');
   const [sweep, setSweep] = useState(null);
+  const [rooms, setRooms] = useState([]);
+  const [roomStatus, setRoomStatus] = useState('waiting');
   const [retry, setRetry] = useState(0);
 
   useEffect(() => {
     let active = true;
     let subscription;
+    let roomSubscription;
     let sdk;
     let timer;
     let onLoad;
@@ -18,6 +21,8 @@ export default function MatterportViewer({ modelId }) {
     setStatus('Loading viewer…');
     setError('');
     setSweep(null);
+    setRooms([]);
+    setRoomStatus('waiting');
 
     async function initialize() {
       try {
@@ -39,8 +44,25 @@ export default function MatterportViewer({ modelId }) {
             setStatus('SDK connected');
             setError('');
             subscription = sdk.Sweep.current.subscribe(current => {
-              if (active && current.sid) setSweep({ id: current.sid, floor: current.floorInfo?.sequence });
+              if (active) setSweep(current.sid ? { id: current.sid, floor: current.floorInfo?.sequence } : null);
             });
+            // Room tracking is optional: missing room data must not break the viewer.
+            try {
+              if (!sdk.Room?.current?.subscribe) {
+                setRoomStatus('unavailable');
+              } else {
+                roomSubscription = sdk.Room.current.subscribe(current => {
+                  if (!active) return;
+                  setRooms(Array.isArray(current?.rooms) ? current.rooms : []);
+                  setRoomStatus('ready');
+                });
+              }
+            } catch {
+              if (active) {
+                setRooms([]);
+                setRoomStatus('unavailable');
+              }
+            }
           } catch {
             if (active) {
               clearTimeout(timer);
@@ -64,6 +86,7 @@ export default function MatterportViewer({ modelId }) {
       clearTimeout(timer);
       if (onLoad) iframe.removeEventListener('load', onLoad);
       subscription?.cancel?.();
+      roomSubscription?.cancel?.();
       if (sdk && window.mpSdk === sdk) delete window.mpSdk;
     };
   }, [modelId, retry]);
@@ -74,6 +97,18 @@ export default function MatterportViewer({ modelId }) {
         <span>{error ? 'Connection needs attention' : status}</span>
         <span>{sweep ? `Floor index: ${sweep.floor ?? 'unknown'} · Sweep: ${sweep.id}` : `Model: ${modelId}`}</span>
         <button onClick={() => setRetry(value => value + 1)}>Reload</button>
+      </div>
+      <div className="room-status" role="status" aria-live="polite" aria-atomic="true">
+        <strong>{rooms.length > 1 ? 'Current rooms:' : 'Current room:'}</strong>
+        {error ? <span>Unavailable while disconnected</span>
+          : roomStatus === 'unavailable' ? <span>Room tracking unavailable for this model or SDK</span>
+          : roomStatus === 'waiting' ? <span>Waiting for room data…</span>
+          : rooms.length ? rooms.map((room, index) => (
+            <span className="room-label" key={room.id || index} title={`Room ID: ${room.id || 'unknown'}`}>
+              {room.label?.trim() || 'Unlabeled room'}
+              <code>{room.id || 'No room ID'}</code>
+            </span>
+          )) : <span>No room reported at this viewpoint</span>}
       </div>
       {error && <p className="error" role="alert">{error}</p>}
       <iframe ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
