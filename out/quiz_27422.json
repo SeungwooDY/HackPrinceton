@@ -1,0 +1,155 @@
+{
+  "propertyId": 27422,
+  "quizItems": [
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Lobby, Kitchen, Living",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "1Gu1PWojCPH",
+      "sweepId": "muf976t960etp1z16h1kndi6c",
+      "quizCategory": "lobby",
+      "scenario": "A receptionist's desk has a phone off the hook and a half-finished drink.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; the receptionist may be deeper in the building."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and continue the planned search pattern."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Assume the receptionist already left through the front door."
+        },
+        {
+          "rank": "worst",
+          "text": "Disregard the desk entirely as irrelevant."
+        }
+      ],
+      "rationale": "Signs of a hastily-abandoned post suggest the occupant went further in rather than out; assuming they safely left is the riskiest read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "xy2x8mpaaqknp7q2c3nnbw1ma",
+      "roomLabel": "Lobby",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "1Gu1PWojCPH",
+      "sweepId": "4ubq5pqactk820giw2f7iumya",
+      "quizCategory": "lobby",
+      "scenario": "The lobby is the main path between two stairwells and is filling with light smoke.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Prioritize clearing/holding this space -- it's the primary egress route."
+        },
+        {
+          "rank": "second_best",
+          "text": "Ventilate it when convenient, after other rooms."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Treat it the same priority as any other room on the floor."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it since no fire is visible here."
+        }
+      ],
+      "rationale": "A lobby on the egress path outranks an equivalent side room; losing it to smoke blocks evacuation for everyone behind it.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Office, Living",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "1Gu1PWojCPH",
+      "sweepId": "bw68sbcz7tz83x2krrdcfhbfb",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "h26t7ky77ew74yb0pg8qqf5rd",
+      "roomLabel": "Closet",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "vpZPAH9DSBM",
+      "sweepId": "7nuxguywx9t7xq5emwidcsf5c",
+      "quizCategory": "closet",
+      "scenario": "The closet door is slightly ajar and you notice small shoes just inside.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Check inside -- children sometimes hide in closets during a fire."
+        },
+        {
+          "rank": "second_best",
+          "text": "Glance in from the doorway without physically checking."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Note the shoes and move on."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the closet entirely since it's a small space."
+        }
+      ],
+      "rationale": "Closets are a common hiding spot for frightened children; a quick but thorough check is low-cost and high-value, skipping it entirely is worst.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "tt6gm2a0463x9wmnx7rn6gugc",
+      "roomLabel": "Closet",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "vpZPAH9DSBM",
+      "sweepId": "xpfgi9dns4yp1zm8x42b5e9da",
+      "quizCategory": "closet",
+      "scenario": "The closet door is slightly ajar and you notice small shoes just inside.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Check inside -- children sometimes hide in closets during a fire."
+        },
+        {
+          "rank": "second_best",
+          "text": "Glance in from the doorway without physically checking."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Note the shoes and move on."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the closet entirely since it's a small space."
+        }
+      ],
+      "rationale": "Closets are a common hiding spot for frightened children; a quick but thorough check is low-cost and high-value, skipping it entirely is worst.",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}

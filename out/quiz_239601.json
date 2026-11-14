@@ -1,0 +1,215 @@
+{
+  "propertyId": 239601,
+  "quizItems": [
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "4wShWrJEkf7",
+      "sweepId": "kuexraceesi9s3z6saff9br1a",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Unlabeled room",
+      "roomLabelSource": "real-matterport-unlabeled",
+      "matterportModelId": "FTkFHSZ4isL",
+      "sweepId": "a2upfiz7mhk09rtmrth9xp07b",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "tt6gm2a0463x9wmnx7rn6gugc",
+      "roomLabel": "Lobby",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "FTkFHSZ4isL",
+      "sweepId": "fuzhqhf8hn7czdskg8gctxrpb",
+      "quizCategory": "lobby",
+      "scenario": "The lobby is the main path between two stairwells and is filling with light smoke.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Prioritize clearing/holding this space -- it's the primary egress route."
+        },
+        {
+          "rank": "second_best",
+          "text": "Ventilate it when convenient, after other rooms."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Treat it the same priority as any other room on the floor."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it since no fire is visible here."
+        }
+      ],
+      "rationale": "A lobby on the egress path outranks an equivalent side room; losing it to smoke blocks evacuation for everyone behind it.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "3m54yff1z7crxaywd8if9rb0d",
+      "roomLabel": "Basement",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "FTkFHSZ4isL",
+      "sweepId": "xuid7i4pg3m10sw2nmqznz4ic",
+      "quizCategory": "basement",
+      "scenario": "Visibility is near zero and you can hear the HVAC system still running.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Confirm your egress route before proceeding further in."
+        },
+        {
+          "rank": "second_best",
+          "text": "Proceed slowly while periodically checking your route back."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Proceed quickly to cover more ground."
+        },
+        {
+          "rank": "worst",
+          "text": "Proceed without tracking the way back out."
+        }
+      ],
+      "rationale": "Limited-egress, low-visibility spaces are high-risk for disorientation; moving fast without tracking your exit is the worst approach.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "h26t7ky77ew74yb0pg8qqf5rd",
+      "roomLabel": "Lobby",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "FTkFHSZ4isL",
+      "sweepId": "wmmg3hpki1i3x3p96n6ehx3sb",
+      "quizCategory": "lobby",
+      "scenario": "The lobby is the main path between two stairwells and is filling with light smoke.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Prioritize clearing/holding this space -- it's the primary egress route."
+        },
+        {
+          "rank": "second_best",
+          "text": "Ventilate it when convenient, after other rooms."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Treat it the same priority as any other room on the floor."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it since no fire is visible here."
+        }
+      ],
+      "rationale": "A lobby on the egress path outranks an equivalent side room; losing it to smoke blocks evacuation for everyone behind it.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "2qdmc5i9byxi79ry1pxdkqzea",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "FTkFHSZ4isL",
+      "sweepId": "grn6de34hs8xn6yzeeck9tnfc",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "xy2x8mpaaqknp7q2c3nnbw1ma",
+      "roomLabel": "Lobby",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "FTkFHSZ4isL",
+      "sweepId": "39mmc43wt0m9npi159363kxfb",
+      "quizCategory": "lobby",
+      "scenario": "The lobby is the main path between two stairwells and is filling with light smoke.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Prioritize clearing/holding this space -- it's the primary egress route."
+        },
+        {
+          "rank": "second_best",
+          "text": "Ventilate it when convenient, after other rooms."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Treat it the same priority as any other room on the floor."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it since no fire is visible here."
+        }
+      ],
+      "rationale": "A lobby on the egress path outranks an equivalent side room; losing it to smoke blocks evacuation for everyone behind it.",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}

@@ -1,0 +1,515 @@
+{
+  "propertyId": 27120,
+  "quizItems": [
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Office, Kitchen, Living, Dining",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "ct7tt16dt1yn6k6myy0f6gn4d",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "2qdmc5i9byxi79ry1pxdkqzea",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "dtmcwyyuzwcxzt6zaekg4qicd",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "b4qtykzcazp4iumkamm7y7h2b",
+      "roomLabel": "Corridor",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "ht6x18f6ic7r8fyxq3xhxy43d",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "n81qfe51azs8iexnbqwspye6c",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "i25wwbgs7magmcnc4xekh0tfa",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Office, Kitchen, Living, Dining",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "stw7fg9fsstg6c2kmrdmkks3a",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "ediidma5zg15dufx3n0qyq21a",
+      "roomLabel": "Dining",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "xix57dymuuegf3pp7nqyxgbhc",
+      "quizCategory": "living",
+      "scenario": "The room is clear, but a baby monitor on the shelf is powered on and transmitting static.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat it as evidence of an infant nearby and prioritize nearby bedrooms."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and continue the standard search order."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Mark the room cleared and move on."
+        },
+        {
+          "rank": "worst",
+          "text": "Disregard it as an irrelevant object."
+        }
+      ],
+      "rationale": "A powered baby monitor strongly implies a child is present somewhere nearby; disregarding it is the worst read of the evidence.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "19ab05tns5h6y4qm42esqqpea",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "h385926hs1yw93qsk4mg5t1ab",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "tt6gm2a0463x9wmnx7rn6gugc",
+      "roomLabel": "Corridor",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "s3aifdmyezszhttdn864memad",
+      "quizCategory": "hallway",
+      "scenario": "This corridor connects four rooms and is the only path to the stairwell from this side of the floor.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Keep this hallway clear and ventilated before focusing on side rooms."
+        },
+        {
+          "rank": "second_best",
+          "text": "Search a side room first, then return to the hallway."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Treat it as equal priority to any single room."
+        },
+        {
+          "rank": "worst",
+          "text": "Let smoke bank here while fully clearing one room first."
+        }
+      ],
+      "rationale": "A blocked single-path corridor traps every room behind it; protecting it outranks searching any one adjoining room first.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "h26t7ky77ew74yb0pg8qqf5rd",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "wk18zzga80bg2mu3wxxkmakeb",
+      "quizCategory": "office",
+      "scenario": "Several desks have monitors still on and chairs pulled out, but the room is empty.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; check adjoining rooms before clearing the area."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it, then clear this room and continue the pattern search."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Clear the room without comment."
+        },
+        {
+          "rank": "worst",
+          "text": "Assume everyone already evacuated based on the empty room."
+        }
+      ],
+      "rationale": "Powered equipment and disturbed furniture suggest occupants left in a hurry and may be nearby; assuming full evacuation from one empty room is the worst read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "xy2x8mpaaqknp7q2c3nnbw1ma",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "zu19n996bb0mksxgmc0zkzeca",
+      "quizCategory": "office",
+      "scenario": "Several desks have monitors still on and chairs pulled out, but the room is empty.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; check adjoining rooms before clearing the area."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it, then clear this room and continue the pattern search."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Clear the room without comment."
+        },
+        {
+          "rank": "worst",
+          "text": "Assume everyone already evacuated based on the empty room."
+        }
+      ],
+      "rationale": "Powered equipment and disturbed furniture suggest occupants left in a hurry and may be nearby; assuming full evacuation from one empty room is the worst read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "3m54yff1z7crxaywd8if9rb0d",
+      "roomLabel": "Dining",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "9k8rxizcsrxfz0eyneuk8f4pb",
+      "quizCategory": "living",
+      "scenario": "The room is clear, but a baby monitor on the shelf is powered on and transmitting static.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat it as evidence of an infant nearby and prioritize nearby bedrooms."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and continue the standard search order."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Mark the room cleared and move on."
+        },
+        {
+          "rank": "worst",
+          "text": "Disregard it as an irrelevant object."
+        }
+      ],
+      "rationale": "A powered baby monitor strongly implies a child is present somewhere nearby; disregarding it is the worst read of the evidence.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "kuc0fpmsgqxff63egrxrycfud",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "ym0erax635gw2fn56s0ay6t5a",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "a5f9age4zzxewres6iqux2emc",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "349ber5rzmcc8ug3a81918pxd",
+      "quizCategory": "office",
+      "scenario": "Several desks have monitors still on and chairs pulled out, but the room is empty.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; check adjoining rooms before clearing the area."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it, then clear this room and continue the pattern search."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Clear the room without comment."
+        },
+        {
+          "rank": "worst",
+          "text": "Assume everyone already evacuated based on the empty room."
+        }
+      ],
+      "rationale": "Powered equipment and disturbed furniture suggest occupants left in a hurry and may be nearby; assuming full evacuation from one empty room is the worst read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "b2kez6wsw32fm2x3ui593u3hc",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "647bezhcwec4xt24w1gpa1bta",
+      "quizCategory": "office",
+      "scenario": "Several desks have monitors still on and chairs pulled out, but the room is empty.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; check adjoining rooms before clearing the area."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it, then clear this room and continue the pattern search."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Clear the room without comment."
+        },
+        {
+          "rank": "worst",
+          "text": "Assume everyone already evacuated based on the empty room."
+        }
+      ],
+      "rationale": "Powered equipment and disturbed furniture suggest occupants left in a hurry and may be nearby; assuming full evacuation from one empty room is the worst read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "3ygfq6yfyyw3hi9x7u5rm2iqa",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "knkixwhrmte3wu1m9bxwbuykd",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "m8npxsuk79xy21dd09x9wtped",
+      "roomLabel": "Dining",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "deggt45iaszkbi9qw3cq0x73d",
+      "quizCategory": "living",
+      "scenario": "The room is clear, but a baby monitor on the shelf is powered on and transmitting static.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat it as evidence of an infant nearby and prioritize nearby bedrooms."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and continue the standard search order."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Mark the room cleared and move on."
+        },
+        {
+          "rank": "worst",
+          "text": "Disregard it as an irrelevant object."
+        }
+      ],
+      "rationale": "A powered baby monitor strongly implies a child is present somewhere nearby; disregarding it is the worst read of the evidence.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "wbpb7dkfuwnikd1kq2a9hz70a",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "ZSPaQbkGcJJ",
+      "sweepId": "cgx4b2wdzycdup3tkn9sp4y4d",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}

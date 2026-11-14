@@ -1,0 +1,65 @@
+{
+  "propertyId": 234013,
+  "quizItems": [
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Corridor, Bathroom",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "686Yf4iAahV",
+      "sweepId": "b29ce5t9eaw84z07rtkq1112c",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "686Yf4iAahV",
+      "sweepId": "a3rx6irpqmc6nnztftc0rkn8c",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}
