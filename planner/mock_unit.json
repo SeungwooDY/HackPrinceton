@@ -1,0 +1,31 @@
+{
+  "modelId": "MOCK-2BR",
+  "_note": "Hand-made 2-bedroom, single floor, 12 sweeps. Every adjacent sweep is exactly 2.0 m apart so distances are countable by hand. Shared with the frontend. Anchors (center-most sweep per room): hall-1 -> s03, kitchen-1 -> s05, living-1 -> s06, bath-1 -> s07, bed-1 -> s08, bed-2 -> s10.",
+  "sweeps": [
+    { "id": "s01", "floor": 0, "room": "foyer-1",   "position": { "x": 0,  "y": 0, "z": 0 }, "neighbors": ["s02", "s05", "s06"] },
+    { "id": "s02", "floor": 0, "room": "hall-1",     "position": { "x": 0,  "y": 0, "z": 2 }, "neighbors": ["s01", "s03"] },
+    { "id": "s03", "floor": 0, "room": "hall-1",     "position": { "x": 0,  "y": 0, "z": 4 }, "neighbors": ["s02", "s04", "s07"] },
+    { "id": "s04", "floor": 0, "room": "hall-1",     "position": { "x": 0,  "y": 0, "z": 6 }, "neighbors": ["s03", "s08", "s10"] },
+    { "id": "s05", "floor": 0, "room": "kitchen-1",  "position": { "x": 2,  "y": 0, "z": 0 }, "neighbors": ["s01"] },
+    { "id": "s06", "floor": 0, "room": "living-1",   "position": { "x": -2, "y": 0, "z": 0 }, "neighbors": ["s01"] },
+    { "id": "s07", "floor": 0, "room": "bath-1",     "position": { "x": 2,  "y": 0, "z": 4 }, "neighbors": ["s03"] },
+    { "id": "s08", "floor": 0, "room": "bed-1",      "position": { "x": 2,  "y": 0, "z": 6 }, "neighbors": ["s04", "s09"] },
+    { "id": "s09", "floor": 0, "room": "bed-1",      "position": { "x": 4,  "y": 0, "z": 6 }, "neighbors": ["s08"] },
+    { "id": "s10", "floor": 0, "room": "bed-2",      "position": { "x": -2, "y": 0, "z": 6 }, "neighbors": ["s04", "s11", "s12"] },
+    { "id": "s11", "floor": 0, "room": "bed-2",      "position": { "x": -2, "y": 0, "z": 8 }, "neighbors": ["s10"] },
+    { "id": "s12", "floor": 0, "room": "bed-2",      "position": { "x": -4, "y": 0, "z": 6 }, "neighbors": ["s10"] }
+  ],
+  "rooms": [
+    { "id": "foyer-1",   "type": "foyer",    "label": "Foyer",       "unitId": "unit-mock", "floor": 0 },
+    { "id": "hall-1",    "type": "hallway",  "label": "Hallway",     "unitId": "unit-mock", "floor": 0 },
+    { "id": "kitchen-1", "type": "kitchen",  "label": "Kitchen",     "unitId": "unit-mock", "floor": 0 },
+    { "id": "living-1",  "type": "living",   "label": "Living Room", "unitId": "unit-mock", "floor": 0 },
+    { "id": "bath-1",    "type": "bathroom", "label": "Bathroom",    "unitId": "unit-mock", "floor": 0 },
+    { "id": "bed-1",     "type": "bedroom",  "label": "Bedroom 1",   "unitId": "unit-mock", "floor": 0 },
+    { "id": "bed-2",     "type": "bedroom",  "label": "Bedroom 2",   "unitId": "unit-mock", "floor": 0 }
+  ],
+  "exits": [
+    { "id": "door-main", "type": "door",   "sweepId": "s01", "unitId": "unit-mock" },
+    { "id": "win-bed2",  "type": "window", "sweepId": "s10", "unitId": "unit-mock", "ladderReachable": null }
+  ]
+}
