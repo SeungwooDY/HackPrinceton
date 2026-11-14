@@ -7,9 +7,59 @@ import mimetypes
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, parse_qs
 
 ROOT = Path(__file__).resolve().parent
+OUT = ROOT / "out"
+
+
+def quiz_items_for_model(model_id):
+    """All quizItems across out/quiz_*.json whose matterportModelId matches.
+
+    Hybrid: the saved files supply the stable room/sweep anchors, but the scenario
+    text is re-derived live from the current quiz_scenarios bank. Scenarios are
+    assigned with NO repeats across this model's rooms (assign_distinct), so every
+    question in a drill is different (until a category's pool is exhausted). Edits
+    to the bank show up on reload with no regeneration. Falls back to the saved
+    text if the generator module can't be imported."""
+    try:
+        from quiz_scenarios import assign_distinct
+    except Exception:
+        assign_distinct = None
+
+    items = []
+    if not OUT.is_dir():
+        return items
+    for path in sorted(OUT.glob("quiz_*.json")):
+        try:
+            doc = json.loads(path.read_text())
+        except (json.JSONDecodeError, OSError):
+            continue
+        for q in doc.get("quizItems", []):
+            if q.get("matterportModelId") == model_id:
+                items.append(q)
+
+    if assign_distinct:
+        try:
+            assignment = assign_distinct(
+                (q["roomId"], q.get("roomLabel")) for q in items if q.get("roomId")
+            )
+            for q in items:
+                picked = assignment.get(q.get("roomId"))
+                if not picked:
+                    continue
+                category, scenario = picked
+                q.update({
+                    "quizCategory": category,
+                    "scenario": scenario["scenario"],
+                    "question": scenario["question"],
+                    "options": scenario["options"],
+                    "rationale": scenario["rationale"],
+                    "scenarioSource": "live-bank-rederived",
+                })
+        except Exception:
+            pass  # keep the saved text
+    return items
 
 
 def sdk_key():
@@ -46,6 +96,13 @@ class Handler(BaseHTTPRequestHandler):
                 }).encode())
                 return
             self.respond(200, "application/json", json.dumps({"matterportSdkKey": key}).encode())
+        elif path == "/api/quiz":
+            model_id = (parse_qs(urlsplit(self.path).query).get("model") or [""])[0]
+            if not model_id:
+                self.respond(400, "application/json", json.dumps({"error": "model query param required"}).encode())
+                return
+            items = quiz_items_for_model(model_id)
+            self.respond(200, "application/json", json.dumps({"model": model_id, "quizItems": items}).encode())
         elif path in ("/", "/index.html") or path.startswith("/assets/"):
             dist = ROOT / "dist"
             target = (dist / ("index.html" if path in ("/", "/index.html") else path.lstrip("/"))).resolve()
