@@ -24,7 +24,7 @@ function explicitQuiz(task) {
       if (indices.length === 1) correctIndex = indices[0];
     }
   }
-  const quiz = normalizeQuiz({ question, options, correctIndex });
+  const quiz = normalizeQuiz({ question, options, correctIndex, scores: source.scores });
   if (quiz && new Set(quiz.options.map(option => option.toLowerCase())).size !== quiz.options.length) return { quiz: null, supplied: true };
   return { quiz, supplied: true };
 }

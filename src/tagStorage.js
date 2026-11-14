@@ -5,7 +5,12 @@ export function normalizeQuiz(quiz) {
   if (!quiz || typeof quiz.question !== 'string' || !quiz.question.trim() || !Array.isArray(quiz.options)
       || quiz.options.length < 2 || quiz.options.length > 4 || !quiz.options.every(option => typeof option === 'string' && option.trim())
       || !Number.isInteger(quiz.correctIndex) || quiz.correctIndex < 0 || quiz.correctIndex >= quiz.options.length) return null;
-  return { question: quiz.question.trim().slice(0, 300), options: quiz.options.map(option => option.trim().slice(0, 150)), correctIndex: quiz.correctIndex };
+  const normalized = { question: quiz.question.trim().slice(0, 300), options: quiz.options.map(option => option.trim().slice(0, 150)), correctIndex: quiz.correctIndex };
+  // Optional per-option points (rank-based scoring). Preserved when supplied.
+  if (Array.isArray(quiz.scores) && quiz.scores.length === quiz.options.length && quiz.scores.every(score => Number.isFinite(score))) {
+    normalized.scores = quiz.scores.map(Number);
+  }
+  return normalized;
 }
 
 export function gradeTagAnswer(tag, selectedIndex) {

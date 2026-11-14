@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { normalizeQuiz } from './tagStorage.js';
 
-function Question({ task, onAnswer, onReview, onReset }) {
+function Question({ task, onAnswer, onReview }) {
   const quiz = normalizeQuiz(task.quiz);
   const [choice, setChoice] = useState(null);
-  const completed = task.quizResult === 'correct';
+  const answered = task.quizResult === 'answered';
   return <>
     <p className="sweep-task-title">{task.label}</p>
-    {quiz ? <><p className="sweep-question-text">{quiz.question}</p><div className="sweep-answer-options">{quiz.options.map((option, index) => <button key={index} type="button" disabled={completed} className={completed && index === quiz.correctIndex ? 'answer-correct' : choice === index && task.quizResult === 'incorrect' ? 'answer-incorrect' : ''} onClick={() => {setChoice(index);onAnswer(task, index);}}><span>{String.fromCharCode(65+index)}</span>{option}</button>)}</div><p className={`sweep-feedback ${completed ? 'correct' : task.quizResult === 'incorrect' ? 'incorrect' : ''}`} role="status">{completed ? 'Correct. This question is complete.' : task.quizResult === 'incorrect' ? 'Not quite. Look around and try again.' : 'Choose an answer.'}</p><button className="sweep-text-button" onClick={() => {setChoice(null);onReset(task);}}>Reset question</button></> : <><p className="sweep-question-text">{task.description || 'Review this training checkpoint.'}</p><button className="sweep-review-button" disabled={task.reviewed} onClick={() => onReview(task)}>{task.reviewed ? 'Reviewed' : 'Mark reviewed'}</button></>}
+    {quiz ? <><p className="sweep-question-text">{quiz.question}</p><div className="sweep-answer-options">{quiz.options.map((option, index) => <button key={index} type="button" disabled={answered} aria-pressed={choice === index} className={choice === index ? 'answer-selected' : ''} onClick={() => setChoice(index)}><span>{String.fromCharCode(65+index)}</span>{option}</button>)}</div>{answered ? <p className="sweep-feedback" role="status">Answer recorded.</p> : <button className="sweep-confirm-button" type="button" disabled={choice === null} onClick={() => onAnswer(task, choice)}>Confirm</button>}</> : <><p className="sweep-question-text">{task.description || 'Review this training checkpoint.'}</p><button className="sweep-review-button" disabled={task.reviewed} onClick={() => onReview(task)}>{task.reviewed ? 'Reviewed' : 'Mark reviewed'}</button></>}
     <details className="sweep-source"><summary>Task source & location</summary><p>Imported training scenario. Floor, suite, and physical fixture mapping are unverified.</p><p>{task.importedTask.fileName}<br/><code>{task.importedTask.taskPath}</code></p><p>Assigned sweep: <code>{task.importedTask.sweepId}</code></p>{task.importedTask.evidence?.map((item,index) => <p key={index}><code>{item.path}</code>: {String(item.value)}</p>)}</details>
   </>;
 }

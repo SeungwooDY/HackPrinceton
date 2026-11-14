@@ -28,7 +28,7 @@ def vexcel_key():
         return key
     path = ROOT / '.env'
     if path.exists():
-        for line in path.read_text().splitlines():
+        for line in path.read_text(encoding='utf-8').splitlines():
             name, separator, value = line.removeprefix('export ').partition('=')
             if separator and name.strip() == 'VEXCEL_API_KEY':
                 return value.split(' #', 1)[0].strip().strip('\"\'')
@@ -41,7 +41,7 @@ def property_coordinates():
     if not path.exists():
         return {}
     result = {}
-    with path.open() as records:
+    with path.open(encoding='utf-8') as records:
         for line in records:
             if line.strip():
                 record = json.loads(line)
@@ -67,7 +67,7 @@ def model_sites():
     sites = {}
     path = KIT / 'commercial-properties.csv'
     if path.exists():
-        with path.open(newline='') as source:
+        with path.open(newline='', encoding='utf-8') as source:
             for row in csv.DictReader(source):
                 lat, lon = get_property_latlon(row['PropertyId'])
                 if lat is not None:
@@ -80,9 +80,9 @@ def model_sites():
     residential_csv = KIT / 'residential-listings.csv'
     residential_data = KIT / 'data/residential-listings.jsonl'
     if residential_csv.exists() and residential_data.exists():
-        with residential_csv.open(newline='') as source:
+        with residential_csv.open(newline='', encoding='utf-8') as source:
             listings = {row['ListingId']: row for row in csv.DictReader(source)}
-        with residential_data.open() as records:
+        with residential_data.open(encoding='utf-8') as records:
             for line in records:
                 if not line.strip():
                     continue

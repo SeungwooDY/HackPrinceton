@@ -1,0 +1,508 @@
+{
+  "modelId": "PLPZJBUixWt",
+  "_note": "Exported from Showcase SDK Sweep.data. neighbors are RAW — may include sightline/cross-floor edges; filter at graph-build time. exits[] is empty: add doors/windows by hand (SDK has no exit concept).",
+  "sweeps": [
+    {
+      "id": "gafmfi3rr6cc3wsppsmt11d3b",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": -0.07094959914684296,
+        "y": 1.3217825889587402,
+        "z": -0.05146719887852669
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "whcc8g4m7mf5xnh9r8gff3htc"
+      ]
+    },
+    {
+      "id": "wz53gg0kcpb6uk10dhrf3w2wb",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 4.015020847320557,
+        "y": 1.3283442258834839,
+        "z": -2.497478723526001
+      },
+      "neighbors": [
+        "gafmfi3rr6cc3wsppsmt11d3b",
+        "ss2a0nitc9smqxzqk9icex4bd",
+        "gmh5p58e93k8crpq2nf33t9ca",
+        "me1ukcqi1p9i2syrue6e7n0sd",
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "r90ixekn982pb9skxbxawf1cc",
+        "9ch540gbe06bhpbf5mt7c77cb",
+        "q139025u6kr8fimd2fgx984da",
+        "yywdms1a5z0y8nwr3p7a8w8kb",
+        "whcc8g4m7mf5xnh9r8gff3htc"
+      ]
+    },
+    {
+      "id": "ss2a0nitc9smqxzqk9icex4bd",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 4.087184906005859,
+        "y": 1.3304730653762817,
+        "z": -4.400674343109131
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "gmh5p58e93k8crpq2nf33t9ca",
+        "me1ukcqi1p9i2syrue6e7n0sd",
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "r90ixekn982pb9skxbxawf1cc",
+        "9ch540gbe06bhpbf5mt7c77cb"
+      ]
+    },
+    {
+      "id": "gmh5p58e93k8crpq2nf33t9ca",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 3.9411087036132812,
+        "y": 1.3411777019500732,
+        "z": -7.38258171081543
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "ss2a0nitc9smqxzqk9icex4bd",
+        "br93epg8pff4c985iid9ymk7d",
+        "me1ukcqi1p9i2syrue6e7n0sd",
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "r90ixekn982pb9skxbxawf1cc",
+        "9ch540gbe06bhpbf5mt7c77cb",
+        "u71y19m11x254u4c82zm71awd"
+      ]
+    },
+    {
+      "id": "br93epg8pff4c985iid9ymk7d",
+      "floor": 0,
+      "room": "tt6gm2a0463x9wmnx7rn6gugc",
+      "position": {
+        "x": 2.804035186767578,
+        "y": 1.3425710201263428,
+        "z": -7.442314624786377
+      },
+      "neighbors": [
+        "gmh5p58e93k8crpq2nf33t9ca"
+      ]
+    },
+    {
+      "id": "me1ukcqi1p9i2syrue6e7n0sd",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 3.9444096088409424,
+        "y": 1.336970329284668,
+        "z": -8.765190124511719
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "ss2a0nitc9smqxzqk9icex4bd",
+        "gmh5p58e93k8crpq2nf33t9ca",
+        "rx6mpysfu3cmqisai2idbt7ia",
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "r90ixekn982pb9skxbxawf1cc",
+        "9ch540gbe06bhpbf5mt7c77cb",
+        "u71y19m11x254u4c82zm71awd"
+      ]
+    },
+    {
+      "id": "rx6mpysfu3cmqisai2idbt7ia",
+      "floor": 0,
+      "room": "h26t7ky77ew74yb0pg8qqf5rd",
+      "position": {
+        "x": 2.710890769958496,
+        "y": 1.3480298519134521,
+        "z": -8.928433418273926
+      },
+      "neighbors": [
+        "me1ukcqi1p9i2syrue6e7n0sd",
+        "a4qr430t0qfppg4petki6tfib"
+      ]
+    },
+    {
+      "id": "ngm6yxbbwrwsg9kktp30ek7pd",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 4.131170272827148,
+        "y": 1.3340351581573486,
+        "z": -10.867908477783203
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "ss2a0nitc9smqxzqk9icex4bd",
+        "gmh5p58e93k8crpq2nf33t9ca",
+        "me1ukcqi1p9i2syrue6e7n0sd",
+        "r90ixekn982pb9skxbxawf1cc",
+        "9ch540gbe06bhpbf5mt7c77cb",
+        "u71y19m11x254u4c82zm71awd",
+        "a4qr430t0qfppg4petki6tfib",
+        "4q8mup7k23gbc54txwrnz8w2d",
+        "fr0p6piui79snsd4zk83pdn1d",
+        "9nz40np9m5ds2p4s0pffd9a8b"
+      ]
+    },
+    {
+      "id": "r90ixekn982pb9skxbxawf1cc",
+      "floor": 0,
+      "room": "cdz3fkt38kae7tapstpt0eaeb",
+      "position": {
+        "x": 4.001328945159912,
+        "y": 1.327541470527649,
+        "z": -13.543619155883789
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "ss2a0nitc9smqxzqk9icex4bd",
+        "gmh5p58e93k8crpq2nf33t9ca",
+        "me1ukcqi1p9i2syrue6e7n0sd",
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "9ch540gbe06bhpbf5mt7c77cb"
+      ]
+    },
+    {
+      "id": "9ch540gbe06bhpbf5mt7c77cb",
+      "floor": 0,
+      "room": "cdz3fkt38kae7tapstpt0eaeb",
+      "position": {
+        "x": 3.4970200061798096,
+        "y": 1.301864504814148,
+        "z": -17.447568893432617
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "ss2a0nitc9smqxzqk9icex4bd",
+        "gmh5p58e93k8crpq2nf33t9ca",
+        "me1ukcqi1p9i2syrue6e7n0sd",
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "r90ixekn982pb9skxbxawf1cc"
+      ]
+    },
+    {
+      "id": "u71y19m11x254u4c82zm71awd",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 5.603572368621826,
+        "y": 1.3327094316482544,
+        "z": -11.59605598449707
+      },
+      "neighbors": [
+        "gmh5p58e93k8crpq2nf33t9ca",
+        "me1ukcqi1p9i2syrue6e7n0sd",
+        "ngm6yxbbwrwsg9kktp30ek7pd"
+      ]
+    },
+    {
+      "id": "a4qr430t0qfppg4petki6tfib",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 6.138998031616211,
+        "y": 1.3317639827728271,
+        "z": -9.886229515075684
+      },
+      "neighbors": [
+        "rx6mpysfu3cmqisai2idbt7ia",
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "4q8mup7k23gbc54txwrnz8w2d",
+        "fr0p6piui79snsd4zk83pdn1d",
+        "9nz40np9m5ds2p4s0pffd9a8b"
+      ]
+    },
+    {
+      "id": "4q8mup7k23gbc54txwrnz8w2d",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 8.155732154846191,
+        "y": 1.3333826065063477,
+        "z": -8.170648574829102
+      },
+      "neighbors": [
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "a4qr430t0qfppg4petki6tfib",
+        "6t7qxxdwaukihp7uugdst889b",
+        "ke5z07txbr45mxikq65rhd77a",
+        "fr0p6piui79snsd4zk83pdn1d",
+        "9nz40np9m5ds2p4s0pffd9a8b"
+      ]
+    },
+    {
+      "id": "6t7qxxdwaukihp7uugdst889b",
+      "floor": 0,
+      "room": "xy2x8mpaaqknp7q2c3nnbw1ma",
+      "position": {
+        "x": 8.907328605651855,
+        "y": 1.3307762145996094,
+        "z": -8.973793029785156
+      },
+      "neighbors": [
+        "4q8mup7k23gbc54txwrnz8w2d",
+        "ke5z07txbr45mxikq65rhd77a"
+      ]
+    },
+    {
+      "id": "ke5z07txbr45mxikq65rhd77a",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 7.852911949157715,
+        "y": 1.3348791599273682,
+        "z": -6.878955364227295
+      },
+      "neighbors": [
+        "4q8mup7k23gbc54txwrnz8w2d",
+        "6t7qxxdwaukihp7uugdst889b",
+        "r4dp91qqegx6hw8mwbchwtx9b",
+        "fr0p6piui79snsd4zk83pdn1d",
+        "cyswrxfn2mi5zp758ieh3ng5b"
+      ]
+    },
+    {
+      "id": "r4dp91qqegx6hw8mwbchwtx9b",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 6.410355567932129,
+        "y": 1.3392083644866943,
+        "z": -7.293156147003174
+      },
+      "neighbors": [
+        "ke5z07txbr45mxikq65rhd77a",
+        "fr0p6piui79snsd4zk83pdn1d",
+        "cyswrxfn2mi5zp758ieh3ng5b"
+      ]
+    },
+    {
+      "id": "fr0p6piui79snsd4zk83pdn1d",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 10.843242645263672,
+        "y": 1.3168492317199707,
+        "z": -5.9040069580078125
+      },
+      "neighbors": [
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "a4qr430t0qfppg4petki6tfib",
+        "4q8mup7k23gbc54txwrnz8w2d",
+        "ke5z07txbr45mxikq65rhd77a",
+        "r4dp91qqegx6hw8mwbchwtx9b",
+        "9nz40np9m5ds2p4s0pffd9a8b",
+        "cyswrxfn2mi5zp758ieh3ng5b"
+      ]
+    },
+    {
+      "id": "9nz40np9m5ds2p4s0pffd9a8b",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 13.518548965454102,
+        "y": 1.3040567636489868,
+        "z": -3.7096643447875977
+      },
+      "neighbors": [
+        "ngm6yxbbwrwsg9kktp30ek7pd",
+        "a4qr430t0qfppg4petki6tfib",
+        "4q8mup7k23gbc54txwrnz8w2d",
+        "fr0p6piui79snsd4zk83pdn1d",
+        "cyswrxfn2mi5zp758ieh3ng5b",
+        "0ux7hbn7bgfeir1yf4y8duwya"
+      ]
+    },
+    {
+      "id": "cyswrxfn2mi5zp758ieh3ng5b",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 17.849254608154297,
+        "y": 1.3218908309936523,
+        "z": -2.872469186782837
+      },
+      "neighbors": [
+        "ke5z07txbr45mxikq65rhd77a",
+        "r4dp91qqegx6hw8mwbchwtx9b",
+        "fr0p6piui79snsd4zk83pdn1d",
+        "9nz40np9m5ds2p4s0pffd9a8b",
+        "0ux7hbn7bgfeir1yf4y8duwya",
+        "q139025u6kr8fimd2fgx984da"
+      ]
+    },
+    {
+      "id": "0ux7hbn7bgfeir1yf4y8duwya",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 11.546030044555664,
+        "y": 1.3149584531784058,
+        "z": 0.2935420572757721
+      },
+      "neighbors": [
+        "9nz40np9m5ds2p4s0pffd9a8b",
+        "cyswrxfn2mi5zp758ieh3ng5b",
+        "q139025u6kr8fimd2fgx984da",
+        "yywdms1a5z0y8nwr3p7a8w8kb",
+        "f7ik3a9ya51ckyasusnp4x7ud"
+      ]
+    },
+    {
+      "id": "q139025u6kr8fimd2fgx984da",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 9.874496459960938,
+        "y": 1.313338279724121,
+        "z": 0.25439250469207764
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "cyswrxfn2mi5zp758ieh3ng5b",
+        "0ux7hbn7bgfeir1yf4y8duwya",
+        "yywdms1a5z0y8nwr3p7a8w8kb",
+        "fefu2mrm0qmyw1d0x4nrg0r0d",
+        "4hi8t2wnrfcaya4wfcgn5gbeb",
+        "f7ik3a9ya51ckyasusnp4x7ud",
+        "whcc8g4m7mf5xnh9r8gff3htc"
+      ]
+    },
+    {
+      "id": "yywdms1a5z0y8nwr3p7a8w8kb",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 9.02562427520752,
+        "y": 1.313248634338379,
+        "z": -0.41171994805336
+      },
+      "neighbors": [
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "0ux7hbn7bgfeir1yf4y8duwya",
+        "q139025u6kr8fimd2fgx984da",
+        "fefu2mrm0qmyw1d0x4nrg0r0d",
+        "4hi8t2wnrfcaya4wfcgn5gbeb",
+        "f7ik3a9ya51ckyasusnp4x7ud",
+        "whcc8g4m7mf5xnh9r8gff3htc"
+      ]
+    },
+    {
+      "id": "fefu2mrm0qmyw1d0x4nrg0r0d",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 9.516359329223633,
+        "y": 1.3078302145004272,
+        "z": -2.675758123397827
+      },
+      "neighbors": [
+        "q139025u6kr8fimd2fgx984da",
+        "yywdms1a5z0y8nwr3p7a8w8kb",
+        "4hi8t2wnrfcaya4wfcgn5gbeb"
+      ]
+    },
+    {
+      "id": "4hi8t2wnrfcaya4wfcgn5gbeb",
+      "floor": 0,
+      "room": "3m54yff1z7crxaywd8if9rb0d",
+      "position": {
+        "x": 9.387797355651855,
+        "y": 1.3126063346862793,
+        "z": -3.731346607208252
+      },
+      "neighbors": [
+        "q139025u6kr8fimd2fgx984da",
+        "yywdms1a5z0y8nwr3p7a8w8kb",
+        "fefu2mrm0qmyw1d0x4nrg0r0d"
+      ]
+    },
+    {
+      "id": "f7ik3a9ya51ckyasusnp4x7ud",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 7.743709564208984,
+        "y": 1.3173075914382935,
+        "z": -0.3821495771408081
+      },
+      "neighbors": [
+        "0ux7hbn7bgfeir1yf4y8duwya",
+        "q139025u6kr8fimd2fgx984da",
+        "yywdms1a5z0y8nwr3p7a8w8kb",
+        "whcc8g4m7mf5xnh9r8gff3htc"
+      ]
+    },
+    {
+      "id": "whcc8g4m7mf5xnh9r8gff3htc",
+      "floor": 0,
+      "room": "613htqkzf66zz7hf7n8kzszed",
+      "position": {
+        "x": 5.202164173126221,
+        "y": 1.3186674118041992,
+        "z": -2.57594895362854
+      },
+      "neighbors": [
+        "gafmfi3rr6cc3wsppsmt11d3b",
+        "wz53gg0kcpb6uk10dhrf3w2wb",
+        "q139025u6kr8fimd2fgx984da",
+        "yywdms1a5z0y8nwr3p7a8w8kb",
+        "f7ik3a9ya51ckyasusnp4x7ud"
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "id": "613htqkzf66zz7hf7n8kzszed",
+      "type": "other",
+      "label": "Unlabeled room",
+      "unitId": "PLPZJBUixWt",
+      "floor": 0
+    },
+    {
+      "id": "tt6gm2a0463x9wmnx7rn6gugc",
+      "type": "other",
+      "label": "Unlabeled room",
+      "unitId": "PLPZJBUixWt",
+      "floor": 0
+    },
+    {
+      "id": "h26t7ky77ew74yb0pg8qqf5rd",
+      "type": "other",
+      "label": "Unlabeled room",
+      "unitId": "PLPZJBUixWt",
+      "floor": 0
+    },
+    {
+      "id": "cdz3fkt38kae7tapstpt0eaeb",
+      "type": "other",
+      "label": "Unlabeled room",
+      "unitId": "PLPZJBUixWt",
+      "floor": 0
+    },
+    {
+      "id": "xy2x8mpaaqknp7q2c3nnbw1ma",
+      "type": "other",
+      "label": "Unlabeled room",
+      "unitId": "PLPZJBUixWt",
+      "floor": 0
+    },
+    {
+      "id": "3m54yff1z7crxaywd8if9rb0d",
+      "type": "other",
+      "label": "Unlabeled room",
+      "unitId": "PLPZJBUixWt",
+      "floor": 0
+    }
+  ],
+  "exits": [
+    {
+      "id": "door-1",
+      "type": "door",
+      "sweepId": "gafmfi3rr6cc3wsppsmt11d3b",
+      "unitId": "PLPZJBUixWt"
+    }
+  ]
+}

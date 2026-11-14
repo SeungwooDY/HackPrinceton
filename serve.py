@@ -33,8 +33,8 @@ def quiz_items_for_model(model_id):
         return items
     for path in sorted(OUT.glob("quiz_*.json")):
         try:
-            doc = json.loads(path.read_text())
-        except (json.JSONDecodeError, OSError):
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError, UnicodeDecodeError):
             continue
         for q in doc.get("quizItems", []):
             if q.get("matterportModelId") == model_id:
@@ -63,13 +63,42 @@ def quiz_items_for_model(model_id):
     return items
 
 
+def route_plan_for_model(model_id):
+    """Optimal route through this model's quiz rooms. Needs an exported SweepGraph
+    at planner/sweepgraph_<model>.json (from window.exportSweepGraph())."""
+    import sys
+    planner_dir = ROOT / "planner"
+    graph_path = planner_dir / f"sweepgraph_{model_id}.json"
+    if not graph_path.is_file():
+        return {"feasible": False,
+                "error": f"No exported SweepGraph. Run exportSweepGraph() for "
+                         f"{model_id} and save {graph_path.name} into planner/."}
+    if str(planner_dir) not in sys.path:
+        sys.path.insert(0, str(planner_dir))
+    from contract import SweepGraph
+    from adapter import tasklist_from_quiz
+    from plan import plan
+
+    graph = SweepGraph.load(str(graph_path))
+    tl = tasklist_from_quiz({"quizItems": quiz_items_for_model(model_id)}, graph)
+    rp = plan(graph, tl, max_edge_meters=6.0, same_floor=True, auto_complete_start=False)
+    exit_sweep = next((e.sweepId for e in graph.exits if e.id == rp.exitId), None)
+    return {
+        "drillId": rp.drillId, "feasible": rp.feasible, "order": rp.order,
+        "exitId": rp.exitId, "exitSweepId": exit_sweep,
+        "totalMeters": rp.totalMeters, "unreachable": rp.unreachable,
+        "legs": [{"from": lg.frm, "to": lg.to, "sweeps": lg.sweeps,
+                  "meters": lg.meters, "carrying": lg.carrying} for lg in rp.legs],
+    }
+
+
 def sdk_key():
     value = os.environ.get("MATTER_PORT_SDK_KEY", "").strip()
     if value:
         return value
     env_file = ROOT / ".env"
     if env_file.exists():
-        for line in env_file.read_text().splitlines():
+        for line in env_file.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if line.startswith("export "):
                 line = line[7:].lstrip()
@@ -121,6 +150,16 @@ class Handler(BaseHTTPRequestHandler):
                 return
             items = quiz_items_for_model(model_id)
             self.respond(200, "application/json", json.dumps({"model": model_id, "quizItems": items}).encode())
+        elif path == "/api/plan":
+            model_id = (parse_qs(urlsplit(self.path).query).get("model") or [""])[0]
+            if not model_id:
+                self.respond(400, "application/json", json.dumps({"error": "model query param required"}).encode())
+                return
+            try:
+                result = route_plan_for_model(model_id)
+            except Exception as e:
+                result = {"feasible": False, "error": str(e)[:300]}
+            self.respond(200, "application/json", json.dumps(result).encode())
         elif path in ("/", "/index.html") or path.startswith("/assets/"):
             dist = ROOT / "dist"
             target = (dist / ("index.html" if path in ("/", "/index.html") else path.lstrip("/"))).resolve()

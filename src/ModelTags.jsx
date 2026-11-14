@@ -7,7 +7,7 @@ import { resolveTask } from './taskImport.js';
 import SweepQuestions from './SweepQuestions.jsx';
 import { questionsAtSweep, sweepIds } from './sweepQuestions.js';
 
-export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, overlayTarget }) {
+export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, overlayTarget, onComplete }) {
   const [tags, setTags] = useState([]);
   const [label, setLabel] = useState('Training point');
   const [description, setDescription] = useState('Inspect this location.');
@@ -23,6 +23,7 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
   const [sweeps, setSweeps] = useState(new Map());
   const [currentSweepIds, setCurrentSweepIds] = useState([]);
   const [taskRequest, setTaskRequest] = useState(null);
+  const activatedDemo = useRef(null);
   const point = useRef(null);
   const runtime = useRef(new Map());
   const saved = useRef([]);
@@ -175,6 +176,44 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     } finally { if (alive.current) setBusy(false); }
   }
 
+  useEffect(() => {
+    if (!importedFile?.autoActivate || busy || sweeps.size === 0) return;
+    const localTasks = importedFile.tasks.filter(task => task.modelId === modelId);
+    if (!localTasks.length) return;
+    const freshDrill = activatedDemo.current?.file !== importedFile;
+    // On a fresh drill, ignore any persisted copies so the latest quiz content
+    // (scores, text) replaces stale localStorage tags and answers start clean.
+    const existing = freshDrill ? new Set() : new Set(saved.current.map(tag => tag.id));
+    const resolved = localTasks.map(task => ({task, result: resolveTask(task, modelId, sweeps, existing)}));
+    const available = resolved.filter(({result}) => result.status === 'ready' || result.status === 'existing');
+    if (available.length === 0) {
+      setMessage('Questions are waiting for their assigned sweeps in this scan.');
+      return;
+    }
+    if (freshDrill) activatedDemo.current = {file: importedFile, navigated: false};
+    const additions = resolved.filter(({result}) => result.status === 'ready').map(({result}) => result.tag);
+    // Fresh drill: drop old copies of these questions, then add the fresh tags.
+    const importedIds = new Set(localTasks.map(task => task.id));
+    const base = freshDrill ? saved.current.filter(tag => !importedIds.has(tag.id)) : saved.current;
+    if (additions.length || freshDrill) persist([...base, ...additions]);
+    setMessage(`${available.length} question(s) active.${available.length < localTasks.length ? ' Waiting for the remaining sweep IDs.' : ''}`);
+    const first = saved.current.find(tag => tag.id === available[0].task.id);
+    if (first && !activatedDemo.current.navigated) {activatedDemo.current.navigated = true;goToTask(first);}
+  }, [importedFile, busy, sweeps, modelId]);
+
+  // Drill complete when every imported quiz question has been answered.
+  useEffect(() => {
+    if (!onComplete) return;
+    const quizTags = tags.filter(tag => tag.importedTask && tag.quiz);
+    if (quizTags.length && quizTags.every(tag => tag.quizResult != null)) {
+      onComplete({
+        score: quizTags.reduce((sum, tag) => sum + (tag.quizPoints ?? 0), 0),
+        maxScore: quizTags.length * 3,
+        count: quizTags.length,
+      });
+    }
+  }, [tags, onComplete]);
+
   async function goToTask(tag) {
     try {
       await sdk.Sweep.moveTo(tag.importedTask.sweepId, {});
@@ -244,10 +283,14 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
 
   function answerTask(task, selectedIndex) {
     const current = saved.current.find(item => item.id === task.id);
-    if (!current || !questionsAtSweep([current], modelId, currentSweepIds).length) return;
-    const correct = gradeTagAnswer(current, selectedIndex);
-    if (correct === null) return;
-    persist(saved.current.map(item => item.id === current.id ? {...item, reviewed: correct, quizResult: correct ? 'correct' : 'incorrect'} : item));
+    // One shot: once answered it locks. No correctness feedback, no reset.
+    if (!current || current.quizResult != null || !questionsAtSweep([current], modelId, currentSweepIds).length) return;
+    const quiz = normalizeQuiz(current.quiz);
+    if (!quiz || !Number.isInteger(selectedIndex)) return;
+    const points = quiz.scores?.[selectedIndex] ?? 0;
+    persist(saved.current.map(item => item.id === current.id
+      ? {...item, reviewed: true, quizResult: 'answered', quizPoints: points, quizChoice: selectedIndex}
+      : item));
   }
   function reviewTask(task) {
     if (!questionsAtSweep([task], modelId, currentSweepIds).length) return;
@@ -257,13 +300,17 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     if (!questionsAtSweep([task], modelId, currentSweepIds).length) return;
     persist(saved.current.map(item => item.id === task.id ? {...item, reviewed: false, quizResult: null} : item));
   }
-  const currentTasks = questionsAtSweep(tags, modelId, currentSweepIds);
+  const demoIds = importedFile?.autoActivate ? new Set(importedFile.tasks.map(task => task.id)) : null;
+  // Once a question is answered (or a review checkpoint reviewed) it drops out,
+  // so Confirm makes the panel disappear / advance to the next question here.
+  const currentTasks = questionsAtSweep(demoIds ? tags.filter(tag => demoIds.has(tag.id)) : tags, modelId, currentSweepIds)
+    .filter(task => (task.quiz ? task.quizResult == null : !task.reviewed));
 
-  return <details className="tag-editor" open>
+  return <details className="tag-editor" open={!importedFile?.autoActivate}>
     <summary>Questions & tags ({tags.length})</summary>
     {overlayTarget && currentTasks.length > 0 && createPortal(<SweepQuestions key={currentSweepIds.join(':')} tasks={currentTasks} request={taskRequest} onAnswer={answerTask} onReview={reviewTask} onReset={resetTask}/>, overlayTarget)}
     {tags.some(tag => tag.importedTask) && <p>Imported questions appear automatically at their assigned sweep and disappear when you leave it. Manual tags remain clickable.</p>}
-    {importedFile && <TaskImportPreview key={`${importedFile.fileName}-${modelId}`} importedFile={importedFile} modelId={modelId} sweeps={sweeps} tags={tags} busy={busy || captureSeconds > 0} onCreate={importTasks}/>}
+    {importedFile && !importedFile.autoActivate && <TaskImportPreview key={`${importedFile.fileName}-${modelId}`} importedFile={importedFile} modelId={modelId} sweeps={sweeps} tags={tags} busy={busy || captureSeconds > 0} onCreate={importTasks}/>}
     <details className="manual-tag-editor" open={!importedFile}>
     <summary>Add a tag manually</summary>
     <p>Choose a task and enter its content. Click “Choose position”, then point at a wall or floor in the walkthrough until the five-second countdown ends. Click “Add tag” to place it.</p>
@@ -283,7 +330,7 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     </details>
     <p className="tag-message" role="status">{message}</p>
     {error && <p className="field-error" role="alert">{error}</p>}
-    {tags.length > 0 && <ul className="tag-list">{tags.map(tag => <li key={tag.id}><div><strong>{tag.label}</strong><span>{tag.quiz ? tag.quizResult === 'correct' ? 'Quiz complete' : tag.quizResult === 'incorrect' ? 'Quiz: try again' : 'Quiz not answered' : tag.reviewed ? 'Reviewed' : 'Not reviewed'}</span>{tag.importedTask && <span>Imported task · floor/suite mapping unverified</span>}</div>{tag.importedTask && <button disabled={busy} onClick={() => goToTask(tag)}>Go to task</button>}{!tag.importedTask && <button disabled={busy} onClick={() => openTag(tag)}>Open</button>}<button disabled={busy} onClick={() => removeTag(tag)}>Remove</button></li>)}</ul>}
+    {tags.length > 0 && <ul className="tag-list">{tags.map(tag => <li key={tag.id}><div><strong>{tag.label}</strong><span>{tag.quiz ? tag.quizResult === 'answered' ? `Answered (+${tag.quizPoints ?? 0})` : tag.quizResult === 'correct' ? 'Quiz complete' : tag.quizResult === 'incorrect' ? 'Quiz: try again' : 'Quiz not answered' : tag.reviewed ? 'Reviewed' : 'Not reviewed'}</span>{tag.importedTask && <span>Imported task · floor/suite mapping unverified</span>}</div>{tag.importedTask && <button disabled={busy} onClick={() => goToTask(tag)}>Go to task</button>}{!tag.importedTask && <button disabled={busy} onClick={() => openTag(tag)}>Open</button>}<button disabled={busy} onClick={() => removeTag(tag)}>Remove</button></li>)}</ul>}
     <p className="tag-storage-note">Tags are saved in this browser for this model. They do not change the original Matterport model.</p>
   </details>;
 }
