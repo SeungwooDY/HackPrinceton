@@ -7,7 +7,9 @@
     "dev": "vite --host 127.0.0.1 --port 5173",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node --test"
+    "test": "node --test src/*.test.js",
+    "setup:bundle": "python3 scripts/setup_matterport_bundle.py",
+    "generate:models": "node scripts/generate_obstacle_models.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

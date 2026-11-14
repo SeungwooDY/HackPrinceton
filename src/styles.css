@@ -263,3 +263,16 @@ button:disabled { cursor: default; opacity: .5; }
 .aerial-quiz-import:hover { background: #353535; }
 .aerial-quiz-import:focus-within { outline: 3px solid #ffda67; outline-offset: 3px; }
 .aerial-quiz-import input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+.obstacle-controls { padding: 12px 24px; border-top: 1px solid #444; border-bottom: 1px solid #444; background: #202020; }
+.obstacle-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.obstacle-toolbar label { display: inline-flex; align-items: center; gap: 8px; }
+.obstacle-toolbar select { padding: 8px; background: #181818; color: #eee; border: 1px solid #777; border-radius: 4px; font: inherit; }
+.obstacle-diagnostic { font-size: 12px; color: #bbb; }
+.obstacle-diagnostic input { width: 16px; min-height: 16px; margin: 0; }
+.obstacle-controls p { margin: 10px 0; font-size: 13px; }
+.obstacle-controls .error { padding: 8px 12px; }
+.obstacle-controls ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; }
+.obstacle-controls li { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border: 1px solid #555; border-radius: 4px; }
+.obstacle-controls li button { min-height: 28px; padding: 3px 8px; font-size: 12px; }
+.obstacle-controls small { color: #aaa; }
