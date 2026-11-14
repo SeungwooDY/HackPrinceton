@@ -14,11 +14,11 @@ import json
 import os
 from collections import defaultdict
 
-KIT = os.path.join(os.path.dirname(__file__), "..", "costar-hackathon-kit")
+KIT = os.path.join(os.path.dirname(__file__), "costar-hackathon-kit")
 DATA = os.path.join(KIT, "data")
 OUT = os.path.join(os.path.dirname(__file__), "out")
 
-ENUMS = json.load(open(os.path.join(KIT, "schemas", "enums.json")))
+ENUMS = json.load(open(os.path.join(KIT, "schemas", "enums.json"), encoding="utf-8"))
 PROPERTY_TYPE = ENUMS.get("PropertyType", {})
 MATERIAL = ENUMS["BuildingConstructionMaterialType"]
 INDUSTRY = ENUMS["IndustryType"]
@@ -44,7 +44,7 @@ HAZARD_INDUSTRIES = {
 
 
 def jsonl(name):
-    with open(os.path.join(DATA, name)) as f:
+    with open(os.path.join(DATA, name), encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 yield json.loads(line)
@@ -63,7 +63,7 @@ def main():
     args = ap.parse_args()
 
     addresses = {}
-    with open(os.path.join(KIT, "commercial-properties.csv")) as f:
+    with open(os.path.join(KIT, "commercial-properties.csv"), encoding="utf-8") as f:
         for r in csv.DictReader(f):
             addresses[int(r["PropertyId"])] = (r["Address"], r["City"])
 
@@ -133,7 +133,7 @@ def main():
     rows.sort(key=lambda r: -r["score"])
     os.makedirs(OUT, exist_ok=True)
     path = os.path.join(OUT, "hero_buildings.csv")
-    with open(path, "w", newline="") as f:
+    with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader()
         w.writerows(rows)
