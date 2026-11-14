@@ -20,11 +20,11 @@ export function installExitMarker() {
   // --- panel UI ---
   const panel = document.createElement("div");
   panel.style.cssText =
-    "position:fixed;left:12px;bottom:12px;z-index:9999;background:#111;color:#eee;" +
+    "position:fixed;left:12px;top:55vh;z-index:9999;background:#111;color:#eee;" +
     "font:12px/1.4 system-ui,sans-serif;padding:10px 12px;border-radius:8px;" +
     "box-shadow:0 2px 12px rgba(0,0,0,.4);max-width:260px;";
   panel.innerHTML = `
-    <div style="font-weight:600;margin-bottom:6px">Exit marker</div>
+    <div data-drag style="font-weight:600;margin-bottom:6px;cursor:move;user-select:none">⠿ Exit marker</div>
     <div data-cur style="opacity:.8;margin-bottom:8px">waiting for SDK…</div>
     <div style="display:flex;gap:6px;margin-bottom:8px">
       <button data-door style="flex:1">+ Door</button>
@@ -33,6 +33,30 @@ export function installExitMarker() {
     <ul data-list style="list-style:none;margin:0 0 8px;padding:0;max-height:120px;overflow:auto"></ul>
     <button data-export style="width:100%">Download graph + exits</button>`;
   document.body.appendChild(panel);
+
+  // Draggable via the header. A transparent overlay captures the mouse while
+  // dragging so it keeps working even when the pointer passes over the Matterport
+  // iframe (which would otherwise swallow the move/up events).
+  panel.querySelector("[data-drag]").addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    const ox = e.clientX - panel.offsetLeft;
+    const oy = e.clientY - panel.offsetTop;
+    const overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed;inset:0;z-index:9998;cursor:move;";
+    document.body.appendChild(overlay);
+    const move = (ev) => {
+      panel.style.left = `${ev.clientX - ox}px`;
+      panel.style.top = `${ev.clientY - oy}px`;
+      panel.style.bottom = "auto";
+    };
+    const up = () => {
+      overlay.remove();
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+    };
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+  });
 
   const curEl = panel.querySelector("[data-cur]");
   const listEl = panel.querySelector("[data-list]");
