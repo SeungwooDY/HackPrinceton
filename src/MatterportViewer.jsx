@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ModelTags from './ModelTags.jsx';
-import { installQuizTags } from './quizTags.js';
 
 export default function MatterportViewer({ modelId, importedFile }) {
   const frame = useRef(null);
@@ -12,25 +11,6 @@ export default function MatterportViewer({ modelId, importedFile }) {
   const [retry, setRetry] = useState(0);
   const [connectedSdk, setConnectedSdk] = useState(null);
   const [overlayTarget, setOverlayTarget] = useState(null);
-
-  // Bridge: once the SDK is connected, auto-place the generated quiz items for
-  // this model as graded tags. Cleans them up on model change / unmount.
-  useEffect(() => {
-    if (!connectedSdk || error) return undefined;
-    let cancelled = false;
-    let placedIds = [];
-    installQuizTags(connectedSdk, modelId).then(res => {
-      if (cancelled) {
-        if (res.placedIds?.length) connectedSdk.Tag?.remove?.(...res.placedIds).catch(() => {});
-      } else {
-        placedIds = res.placedIds || [];
-      }
-    });
-    return () => {
-      cancelled = true;
-      if (placedIds.length) connectedSdk.Tag?.remove?.(...placedIds).catch(() => {});
-    };
-  }, [connectedSdk, modelId, error]);
 
   useEffect(() => {
     let active = true;

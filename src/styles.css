@@ -180,6 +180,10 @@ button:disabled { cursor: default; opacity: .5; }
 .sweep-answer-options button > span { color: #8a7763; font-size: 12px; }
 .sweep-answer-options .answer-correct { background: #e8efdf; border-color: #78916c; color: #365032; }
 .sweep-answer-options .answer-incorrect { background: #f7ead8; border-color: #c3996c; color: #8b562c; }
+.sweep-answer-options .answer-selected { background: #eadfce; border-color: #986b42; color: #5a3f24; }
+.sweep-confirm-button { margin-top: 12px; padding: 9px 14px; border: 1px solid #8b633e; background: #986b42; color: #fffdf8; }
+.sweep-confirm-button:hover:not(:disabled) { background: #825735; }
+.sweep-confirm-button:disabled { opacity: 0.5; cursor: default; }
 .sweep-feedback { padding: 10px 12px; margin: 16px 0 4px; border-left: 2px solid #b9a58c; background: #eee8df; color: #6e5d4c; font-size: 13px; }
 .sweep-feedback.correct { background: #e8efdf; border-color: #78916c; color: #365032; }
 .sweep-feedback.incorrect { background: #f7ead8; border-color: #c3996c; color: #8b562c; }

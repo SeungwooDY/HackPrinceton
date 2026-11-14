@@ -2,26 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import MatterportViewer from './MatterportViewer.jsx';
 import TaskFileInput from './TaskFileInput.jsx';
-import demoTasks from './demo-tasks.json';
-import { parseTaskDocument } from './taskImport.js';
+import { loadQuizFile } from './quizSource.js';
+import { installExporter } from './exportSweepGraph.js';
+import { installExitMarker } from './exitMarker.js';
 import './styles.css';
 
-const DEMO_FILE = { ...parseTaskDocument(demoTasks, 'demo-tasks.json'), autoActivate: true };
-const DEFAULT_MODEL = DEMO_FILE.models[0];
+// Dev helpers: window.exportSweepGraph() for the SweepGraph export, and the
+// on-screen exit-marker panel for designating door/window sweeps.
+installExporter();
+installExitMarker();
+
+const DEFAULT_MODEL = 'PLPZJBUixWt';
 const MODEL_ID = /^[a-zA-Z0-9]{11}$/;
 const requestedModel = new URLSearchParams(window.location.search).get('model');
-const initialModel = DEMO_FILE.models.includes(requestedModel) ? requestedModel : DEFAULT_MODEL;
+const initialModel = MODEL_ID.test(requestedModel || '') ? requestedModel : DEFAULT_MODEL;
 
 function App() {
   const [modelId, setModelId] = useState(initialModel);
   const [input, setInput] = useState(initialModel);
   const [error, setError] = useState('');
-  const [importedFile, setImportedFile] = useState(DEMO_FILE);
+  const [importedFile, setImportedFile] = useState(null);
+  const [customFile, setCustomFile] = useState(false);
   useEffect(() => {
     const url = new URL(window.location.href);
     url.searchParams.set('model', modelId);
     window.history.replaceState({}, '', url);
   }, [modelId]);
+  // Pull this model's questions from the server (/api/quiz), unless the user has
+  // loaded a custom task file.
+  useEffect(() => {
+    if (customFile) return undefined;
+    let live = true;
+    loadQuizFile(modelId)
+      .then(file => { if (live) setImportedFile(file); })
+      .catch(() => { if (live) setImportedFile(null); });
+    return () => { live = false; };
+  }, [modelId, customFile]);
 
   function selectModel(next) {
     if (!MODEL_ID.test(next)) return;
@@ -59,8 +75,8 @@ function App() {
         </form>
         {error && <p className="field-error" id="model-error" role="alert">{error}</p>}
       </div>
-      <p className="demo-file-status">{importedFile?.autoActivate ? 'Demo mode: two questions load automatically from src/demo-tasks.json. The viewer moves to the first checkpoint once sweep data is ready.' : 'Using a custom task file.'}</p>
-      <details className="custom-task-file"><summary>Use a different task file</summary><TaskFileInput importedFile={importedFile} onImport={setImportedFile} onClear={() => setImportedFile(null)} modelId={modelId} onModelChange={selectModel}/></details>
+      <p className="demo-file-status">{customFile ? 'Using a custom task file.' : 'Questions loaded from the server for this model. The viewer moves to the first checkpoint once sweep data is ready.'}</p>
+      <details className="custom-task-file"><summary>Use a different task file</summary><TaskFileInput importedFile={importedFile} onImport={file => { setImportedFile(file); setCustomFile(true); }} onClear={() => setCustomFile(false)} modelId={modelId} onModelChange={selectModel}/></details>
       <MatterportViewer key={modelId} modelId={modelId} importedFile={importedFile}/>
     </main>
   );
