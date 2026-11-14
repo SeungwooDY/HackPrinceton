@@ -132,3 +132,32 @@ button:disabled { cursor: default; opacity: .5; }
 .quiz-fields .quiz-question-field { grid-column: 1 / -1; }
 .quiz-fields > div:last-child { grid-column: 1 / -1; max-width: 400px; }
 @media (max-width: 600px) { .quiz-fields { grid-template-columns: 1fr; padding: 12px; gap: 12px; } }
+
+.task-file-input { padding: 16px 24px; border-bottom: 1px solid #333; }
+.task-file-input > label { display: block; margin-bottom: 8px; }
+.task-file-input > input { max-width: 560px; padding: 8px; }
+.task-file-input input::file-selector-button { margin-right: 12px; border: 1px solid #555; border-radius: 4px; padding: 4px 8px; color: #eee; background: #303030; font: inherit; cursor: pointer; }
+.task-file-summary { max-width: 960px; }
+.task-file-summary p { margin: 12px 0; color: #ccc; }
+.task-file-summary > div { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.task-file-summary select, .scope-select select { min-height: 36px; padding: 6px 12px; border: 1px solid #555; border-radius: 4px; color: #eee; background: #1c1c1c; font: inherit; }
+.task-file-summary details { margin-top: 12px; color: #bbb; }
+.task-file-summary details summary { cursor: pointer; }
+.task-import-preview { margin-top: 16px; padding-bottom: 16px; border-bottom: 1px solid #444; max-width: 1100px; }
+.task-import-preview .import-title { font-weight: 500; margin: 0 0 12px; }
+.import-note { color: #aaa; font-size: 13px; line-height: 1.6; margin: 12px 0; }
+.scope-select { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+.import-task-list { list-style: none; padding: 0; margin: 16px 0; max-height: 400px; overflow: auto; border: 1px solid #444; }
+.import-task-list > li { padding: 12px; border-bottom: 1px solid #333; }
+.import-task-list > li:last-child { border: 0; }
+.import-task-choice { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.import-task-choice input { width: 16px; height: 16px; min-height: 0; flex-shrink: 0; margin: 4px 0 0; accent-color: #b47746; }
+.import-task-choice strong { font-weight: 500; display: block; color: #ddd; }
+.import-task-choice > span > span { display: block; color: #aaa; font-size: 13px; margin-top: 4px; }
+.import-task-list details { margin: 8px 0 0 28px; color: #aaa; font-size: 13px; overflow-wrap: anywhere; }
+.import-task-list details summary { cursor: pointer; }
+.import-task-list details p { margin: 8px 0; }
+.import-task-list details ul { padding-left: 20px; }
+@media(max-width: 600px) { .task-file-input { padding: 16px; } .tag-list li { flex-wrap: wrap; } .tag-list li > div { flex-basis: 100%; } }
+.manual-tag-editor { margin-top: 16px; }
+.manual-tag-editor > p { margin: 12px 0; color: #aaa; }

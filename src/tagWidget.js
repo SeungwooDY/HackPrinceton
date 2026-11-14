@@ -5,6 +5,8 @@ const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&am
 export function createTagWidget(tag) {
   const quiz = normalizeQuiz(tag.quiz);
   const completed = tag.quizResult === 'correct';
+  const importNotice = tag.importedTask ? `<p class="mapping-note">Imported training scenario. Floor, suite, and physical fixture mapping are unverified.</p>` : '';
+  const evidence = tag.importedTask ? `<details class="evidence"><summary>Task source</summary><p>${escapeHtml(tag.importedTask.fileName)} · ${escapeHtml(tag.importedTask.taskPath)}</p><p>Sweep: ${escapeHtml(tag.importedTask.sweepId)}</p>${(tag.importedTask.evidence || []).map(item => `<p>${escapeHtml(item.path)}: ${escapeHtml(item.value)}</p>`).join('')}</details>` : '';
   const content = quiz ? `
     <p class="task-label">Practice question</p>
     <p class="question">${escapeHtml(quiz.question)}</p>
@@ -30,8 +32,9 @@ export function createTagWidget(tag) {
     .feedback.correct{background:#e8efdf;border-color:#78916c;color:#365032}.feedback.incorrect{background:#f7ead8;border-color:#c3996c;color:#8b562c}
     .primary{margin-top:16px;padding:9px 12px;border:1px solid #8b633e;background:#986b42;color:#fffdf8}
     .primary:hover{background:#825735}.text-button{padding:8px 0;margin-top:4px;background:none;border:0;color:#785b42;text-decoration:underline}
+    .mapping-note{margin:0 0 12px;padding:8px;border-left:2px solid #b47746;background:#f1e9df;color:#785b42;font-size:12px;line-height:1.5}.evidence{margin-top:12px;color:#785b42;font-size:12px;overflow-wrap:anywhere}.evidence summary{cursor:pointer}.evidence p{margin-top:8px}
     @media(prefers-reduced-motion:reduce){*{transition:none}}
-    </style></head><body>${content}<script>
+    </style></head><body>${importNotice}${content}${evidence}<script>
     var feedback=document.getElementById('feedback');
     var buttons=Array.from(document.querySelectorAll('.answer'));
     var correctIndex=${quiz ? quiz.correctIndex : -1};

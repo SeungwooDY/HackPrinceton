@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import MatterportViewer from './MatterportViewer.jsx';
+import TaskFileInput from './TaskFileInput.jsx';
 import './styles.css';
 
 const DEFAULT_MODEL = 'KBqHB8Xq9Vo';
@@ -12,6 +13,18 @@ function App() {
   const [modelId, setModelId] = useState(initialModel);
   const [input, setInput] = useState(initialModel);
   const [error, setError] = useState('');
+  const [importedFile, setImportedFile] = useState(null);
+
+  function selectModel(next) {
+    if (!MODEL_ID.test(next)) return;
+    setInput(next);
+    setError('');
+    setModelId(next);
+    const url = new URL(window.location.href);
+    url.search = '';
+    url.searchParams.set('model', next);
+    window.history.replaceState({}, '', url);
+  }
 
   function loadModel(event) {
     event.preventDefault();
@@ -20,12 +33,7 @@ function App() {
       setError('Enter an 11-character Matterport model ID.');
       return;
     }
-    setError('');
-    setModelId(next);
-    const url = new URL(window.location.href);
-    url.search = '';
-    url.searchParams.set('model', next);
-    window.history.replaceState({}, '', url);
+    selectModel(next);
   }
 
   return (
@@ -43,7 +51,8 @@ function App() {
         </form>
         {error && <p className="field-error" id="model-error" role="alert">{error}</p>}
       </div>
-      <MatterportViewer key={modelId} modelId={modelId}/>
+      <TaskFileInput importedFile={importedFile} onImport={setImportedFile} onClear={() => setImportedFile(null)} modelId={modelId} onModelChange={selectModel}/>
+      <MatterportViewer key={modelId} modelId={modelId} importedFile={importedFile}/>
     </main>
   );
 }
