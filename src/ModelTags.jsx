@@ -23,7 +23,6 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
   const [sweeps, setSweeps] = useState(new Map());
   const [currentSweepIds, setCurrentSweepIds] = useState([]);
   const [taskRequest, setTaskRequest] = useState(null);
-  const activatedDemo = useRef(null);
   const point = useRef(null);
   const runtime = useRef(new Map());
   const saved = useRef([]);
@@ -176,25 +175,6 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     } finally { if (alive.current) setBusy(false); }
   }
 
-  useEffect(() => {
-    if (!importedFile?.autoActivate || busy || sweeps.size === 0) return;
-    const localTasks = importedFile.tasks.filter(task => task.modelId === modelId);
-    if (!localTasks.length) return;
-    const existing = new Set(saved.current.map(tag => tag.id));
-    const resolved = localTasks.map(task => ({task, result: resolveTask(task, modelId, sweeps, existing)}));
-    const available = resolved.filter(({result}) => result.status === 'ready' || result.status === 'existing');
-    if (available.length === 0) {
-      setMessage('Demo questions are waiting for their assigned sweeps. If they are not in this scan, edit the sweep IDs in src/demo-tasks.json.');
-      return;
-    }
-    if (activatedDemo.current?.file !== importedFile) activatedDemo.current = {file: importedFile, navigated: false};
-    const additions = resolved.filter(({result}) => result.status === 'ready').map(({result}) => result.tag);
-    if (additions.length) persist([...saved.current, ...additions]);
-    setMessage(`${available.length} demo question(s) active.${available.length < localTasks.length ? ' Waiting for the remaining sweep IDs.' : ''}`);
-    const first = saved.current.find(tag => tag.id === available[0].task.id);
-    if (first && !activatedDemo.current.navigated) {activatedDemo.current.navigated = true;goToTask(first);}
-  }, [importedFile, busy, sweeps, modelId]);
-
   async function goToTask(tag) {
     try {
       await sdk.Sweep.moveTo(tag.importedTask.sweepId, {});
@@ -277,14 +257,13 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     if (!questionsAtSweep([task], modelId, currentSweepIds).length) return;
     persist(saved.current.map(item => item.id === task.id ? {...item, reviewed: false, quizResult: null} : item));
   }
-  const demoIds = importedFile?.autoActivate ? new Set(importedFile.tasks.map(task => task.id)) : null;
-  const currentTasks = questionsAtSweep(demoIds ? tags.filter(tag => demoIds.has(tag.id)) : tags, modelId, currentSweepIds);
+  const currentTasks = questionsAtSweep(tags, modelId, currentSweepIds);
 
-  return <details className="tag-editor" open={!importedFile?.autoActivate}>
+  return <details className="tag-editor" open>
     <summary>Questions & tags ({tags.length})</summary>
     {overlayTarget && currentTasks.length > 0 && createPortal(<SweepQuestions key={currentSweepIds.join(':')} tasks={currentTasks} request={taskRequest} onAnswer={answerTask} onReview={reviewTask} onReset={resetTask}/>, overlayTarget)}
     {tags.some(tag => tag.importedTask) && <p>Imported questions appear automatically at their assigned sweep and disappear when you leave it. Manual tags remain clickable.</p>}
-    {importedFile && !importedFile.autoActivate && <TaskImportPreview key={`${importedFile.fileName}-${modelId}`} importedFile={importedFile} modelId={modelId} sweeps={sweeps} tags={tags} busy={busy || captureSeconds > 0} onCreate={importTasks}/>}
+    {importedFile && <TaskImportPreview key={`${importedFile.fileName}-${modelId}`} importedFile={importedFile} modelId={modelId} sweeps={sweeps} tags={tags} busy={busy || captureSeconds > 0} onCreate={importTasks}/>}
     <details className="manual-tag-editor" open={!importedFile}>
     <summary>Add a tag manually</summary>
     <p>Choose a task and enter its content. Click “Choose position”, then point at a wall or floor in the walkthrough until the five-second countdown ends. Click “Add tag” to place it.</p>

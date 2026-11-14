@@ -8,6 +8,7 @@ import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
+from vexcel import ImageryError, imagery_for_model, site_for_model
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "out"
@@ -96,6 +97,23 @@ class Handler(BaseHTTPRequestHandler):
                 }).encode())
                 return
             self.respond(200, "application/json", json.dumps({"matterportSdkKey": key}).encode())
+        elif path in ("/api/aerial/site", "/api/aerial/image"):
+            query = parse_qs(urlsplit(self.path).query)
+            model_id = (query.get("model") or [""])[0]
+            try:
+                if not model_id or len(model_id) != 11 or not model_id.isascii() or not model_id.isalnum():
+                    raise ImageryError("A valid model query parameter is required.", 400)
+                if path.endswith("/site"):
+                    self.respond(200, "application/json", json.dumps(site_for_model(model_id)).encode())
+                else:
+                    try:
+                        width = int((query.get("width") or ["600"])[0])
+                    except ValueError:
+                        raise ImageryError("Invalid aerial view width.", 400) from None
+                    content_type, image = imagery_for_model(model_id, width)
+                    self.respond(200, content_type, image)
+            except ImageryError as failure:
+                self.respond(failure.status, "application/json", json.dumps({"error": str(failure)}).encode())
         elif path == "/api/quiz":
             model_id = (parse_qs(urlsplit(self.path).query).get("model") or [""])[0]
             if not model_id:

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ModelTags from './ModelTags.jsx';
 import { installQuizTags } from './quizTags.js';
+import AerialView from './AerialView.jsx';
 
 export default function MatterportViewer({ modelId, importedFile }) {
   const frame = useRef(null);
@@ -12,6 +13,46 @@ export default function MatterportViewer({ modelId, importedFile }) {
   const [retry, setRetry] = useState(0);
   const [connectedSdk, setConnectedSdk] = useState(null);
   const [overlayTarget, setOverlayTarget] = useState(null);
+  const [view, setView] = useState('interior');
+  const [aerialOpened, setAerialOpened] = useState(false);
+  const nativeOverview = useRef(false);
+  const restoringInterior = useRef(false);
+  const [viewError, setViewError] = useState('');
+
+  function showAerial() {
+    setViewError('');
+    setAerialOpened(true);
+    setView('aerial');
+  }
+
+  useEffect(() => {
+    if (!connectedSdk?.Mode?.current?.subscribe) return;
+    const subscription = connectedSdk.Mode.current.subscribe(mode => {
+      if (mode === connectedSdk.Mode.Mode.DOLLHOUSE) {
+        nativeOverview.current = true;
+        if (!restoringInterior.current) showAerial();
+      } else if (mode === connectedSdk.Mode.Mode.INSIDE) {
+        nativeOverview.current = false;
+      }
+    });
+    return () => subscription.cancel();
+  }, [connectedSdk]);
+
+  async function showInterior() {
+    setViewError('');
+    // Reveal the iframe before asking its renderer to finish a mode transition.
+    setView('interior');
+    if (nativeOverview.current && connectedSdk) {
+      restoringInterior.current = true;
+      try {
+        await connectedSdk.Mode.moveTo(connectedSdk.Mode.Mode.INSIDE);
+      } catch {
+        setViewError('Unable to return to the walkthrough. Retry or reload the viewer.');
+      } finally {
+        restoringInterior.current = false;
+      }
+    }
+  }
 
   // Bridge: once the SDK is connected, auto-place the generated quiz items for
   // this model as graded tags. Cleans them up on model change / unmount.
@@ -144,9 +185,13 @@ export default function MatterportViewer({ modelId, importedFile }) {
       </details>
       {error && <p className="error" role="alert">{error}</p>}
       {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })}/>}
-      <div className="viewer-viewport">
-        <iframe ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
-        <div className="sweep-question-layer" ref={setOverlayTarget}/>
+      <div className="viewer-stage">
+        {viewError && <p className="error" role="alert">{viewError}</p>}
+        <div className="viewer-viewport">
+        <iframe id="interior-view" hidden={view !== 'interior'} ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
+        <div hidden={view !== 'interior'} className="sweep-question-layer" ref={setOverlayTarget}/>
+        {aerialOpened && <div id="aerial-view" className="aerial-container" hidden={view !== 'aerial'}><AerialView modelId={modelId} onBackToInterior={showInterior}/></div>}
+        </div>
       </div>
     </section>
   );

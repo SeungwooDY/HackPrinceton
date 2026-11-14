@@ -2,21 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import MatterportViewer from './MatterportViewer.jsx';
 import TaskFileInput from './TaskFileInput.jsx';
-import demoTasks from './demo-tasks.json';
-import { parseTaskDocument } from './taskImport.js';
 import './styles.css';
 
-const DEMO_FILE = { ...parseTaskDocument(demoTasks, 'demo-tasks.json'), autoActivate: true };
-const DEFAULT_MODEL = DEMO_FILE.models[0];
+const DEFAULT_MODEL = 'MBnYBa7whdC';
 const MODEL_ID = /^[a-zA-Z0-9]{11}$/;
 const requestedModel = new URLSearchParams(window.location.search).get('model');
-const initialModel = DEMO_FILE.models.includes(requestedModel) ? requestedModel : DEFAULT_MODEL;
+const initialModel = MODEL_ID.test(requestedModel || '') ? requestedModel : DEFAULT_MODEL;
 
 function App() {
   const [modelId, setModelId] = useState(initialModel);
   const [input, setInput] = useState(initialModel);
   const [error, setError] = useState('');
-  const [importedFile, setImportedFile] = useState(DEMO_FILE);
+  const [importedFile, setImportedFile] = useState(null);
   useEffect(() => {
     const url = new URL(window.location.href);
     url.searchParams.set('model', modelId);
@@ -59,8 +56,7 @@ function App() {
         </form>
         {error && <p className="field-error" id="model-error" role="alert">{error}</p>}
       </div>
-      <p className="demo-file-status">{importedFile?.autoActivate ? 'Demo mode: two questions load automatically from src/demo-tasks.json. The viewer moves to the first checkpoint once sweep data is ready.' : 'Using a custom task file.'}</p>
-      <details className="custom-task-file"><summary>Use a different task file</summary><TaskFileInput importedFile={importedFile} onImport={setImportedFile} onClear={() => setImportedFile(null)} modelId={modelId} onModelChange={selectModel}/></details>
+      <details className="custom-task-file"><summary>Import a task file</summary><TaskFileInput importedFile={importedFile} onImport={setImportedFile} onClear={() => setImportedFile(null)} modelId={modelId} onModelChange={selectModel}/></details>
       <MatterportViewer key={modelId} modelId={modelId} importedFile={importedFile}/>
     </main>
   );

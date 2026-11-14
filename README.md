@@ -140,6 +140,23 @@ VEXCEL_API_KEY=
 
 Keys come from `/costar-keys` in the hackathon Discord. The data is only available for the duration of the hackathon.
 
+Matterport's **dollhouse** button loads Vexcel imagery around the selected
+building, initially 200 meters across. Zoom controls range from 200 to 1,600
+meters. The **Interior view** control in the bottom-left corner of the aerial
+image returns to the scan. Floorplan mode remains available in Matterport.
+Coordinates come from the model's property in `commercial-properties.csv` and
+`data/commercial-property.jsonl`, or the listing address linked by `ListingId` in
+`residential-listings.csv` and `data/residential-listings.jsonl` under the local
+CoStar kit. Missing coordinates,
+coverage, or credentials display an error with a retry option.
+
+Run `python3 serve.py` alongside `npm run dev` (or run `npm run build` and serve
+the build with `python3 serve.py`). The Python server proxies Vexcel requests;
+`VEXCEL_API_KEY` stays on the server. Images are cached in memory until restart.
+The integration uses Vexcel's [ortho extract API](https://api.vexcelgroup.com/v2/api-docs),
+with meter-based extents and attribution enabled. Run backend checks with
+`python3 -m unittest discover -s tests`.
+
 ## Open questions (don't assume answers; ask or check)
 
 - **Matterport access:** which SDK and API calls the access zip allows (sweep graph, room labels, Mattertags).
