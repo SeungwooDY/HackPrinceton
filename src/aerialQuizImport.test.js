@@ -40,3 +40,35 @@ test('the example JSON can be imported for the default model', async () => {
   const text = await readFile(new URL('../examples/aerial-quizzes.json', import.meta.url), 'utf8');
   assert.equal(parseAerialQuizFile(text, 'MBnYBa7whdC').length, 3);
 });
+
+
+test('import preserves source evidence and placement notes', () => {
+  const point = { ...AERIAL_QUIZ_POINTS[0], placementNote: 'Training layout; not a feature location.', evidence: [
+    { dataset: 'residential-listing-features.jsonl', recordId: 101, path: 'features[0].name', value: 'Garage', origin: 'Mls', featureId: 5 },
+    { dataset: 'residential-listings.jsonl', recordId: 101, path: 'property.totalParkingSpaces', value: 0 },
+  ] };
+  const file = JSON.stringify({ version: 1, modelId: 'model-a', points: [point] });
+  const [imported] = parseAerialQuizFile(file, 'model-a');
+  assert.deepEqual(imported.evidence, point.evidence);
+  assert.equal(imported.placementNote, point.placementNote);
+  const storage = memoryStorage();
+  saveAerialQuizPoints(storage, 'model-a', [imported]);
+  assert.deepEqual(loadAerialQuizPoints(storage, 'model-a')[0].evidence, point.evidence);
+  for (const evidence of [null, [null], [{ ...point.evidence[0], value: {} }], [{ ...point.evidence[0], path: '' }]]) {
+    assert.throws(() => parseAerialQuizFile(JSON.stringify({ version: 1, modelId: 'model-a', points: [{ ...point, evidence }] }), 'model-a'), /evidence/);
+  }
+});
+
+
+test('unlocated tasks remain unpinned and legacy training offsets are removed', () => {
+  const old = { ...AERIAL_QUIZ_POINTS[0], east: -55, north: 30, placementNote: 'Training layout around the property address coordinates; not a feature location.' };
+  delete old.placementStatus;
+  const [migrated] = parseAerialQuizFile(JSON.stringify({ version: 1, modelId: 'model-a', points: [old] }), 'model-a');
+  assert.equal(migrated.placementStatus, 'unlocated');
+  assert.equal(migrated.east, null);
+  assert.equal(migrated.north, null);
+  const reviewed = { ...old, east: 5, north: -3, placementStatus: 'reviewed', placementNote: 'Reviewed image position.' };
+  const [located] = parseAerialQuizFile(JSON.stringify({ version: 1, modelId: 'model-a', points: [reviewed] }), 'model-a');
+  assert.equal(located.placementStatus, 'reviewed');
+  assert.equal(located.east, 5);
+});

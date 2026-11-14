@@ -263,3 +263,18 @@ button:disabled { cursor: default; opacity: .5; }
 .aerial-quiz-import:hover { background: #353535; }
 .aerial-quiz-import:focus-within { outline: 3px solid #ffda67; outline-offset: 3px; }
 .aerial-quiz-import input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+.aerial-quiz-evidence { font-size: 12px; color: #ccc; overflow-wrap: anywhere; }
+.aerial-quiz-evidence summary { cursor: pointer; }
+.aerial-quiz-evidence ul { padding-left: 18px; margin: 10px 0 0; }
+.aerial-quiz-evidence li { margin-bottom: 10px; }
+.aerial-quiz-evidence li > span, .aerial-quiz-evidence code { display: block; margin-top: 4px; font-size: 11px; }
+
+.aerial-property-tasks { flex-basis: 100%; max-width: 310px; padding: 10px 12px; border: 1px solid #777; border-radius: 5px; background: #202020ed; }
+.aerial-property-tasks summary { cursor: pointer; font-size: 14px; }
+.aerial-property-tasks p { font-size: 12px; color: #bbb; margin: 10px 0; }
+.aerial-property-tasks > div { display: grid; gap: 6px; max-height: 220px; overflow: auto; }
+.aerial-property-tasks button { display: grid; gap: 4px; padding: 8px; text-align: left; }
+.aerial-property-tasks small { font-size: 11px; color: #bbb; }
+.aerial-quiz-hotspot.is-candidate { border-style: dashed; }
+.aerial-quiz-panel .aerial-location-status { color: #e8c786; }

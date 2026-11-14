@@ -165,3 +165,110 @@ with meter-based extents and attribution enabled. Run backend checks with
 - **Vexcel products:** which are available (ortho, oblique, elevation, footprints).
 - **Field fill rates:** for the hero buildings.
 - **Hydrant data:** whether Houston or LA publishes open hydrant locations.
+
+
+## Residential exterior task generator
+
+`generate_exterior_tasks.py` reads the local residential CoStar files and writes
+one JSON document containing sourced facts, exterior reconnaissance tasks, and
+multiple-choice quiz points ready for the Vexcel importer. It runs offline with
+the Python standard library; no API keys or LLM calls are needed. Questions use
+deterministic training templates rather than unverified tactical answer rules.
+
+```bash
+python3 generate_exterior_tasks.py --model-id Ki9YdfpNKum
+# Alternative selectors:
+python3 generate_exterior_tasks.py --listing-id 181343128
+python3 generate_exterior_tasks.py --property-id 500019659444
+```
+
+With no arguments it uses the first supported entry in
+`costar-hackathon-kit/residential-listings.csv`. Explicit model/property selectors
+choose the newest matching listing by `listDate`, with deterministic tie breaks.
+Use `--listing-id` to choose a particular listing snapshot. This joins CSV
+`ListingId` to JSONL `id`, then to the features record's `id`; neither
+`ResidentialListingId` nor a commercial `PropertyId` is an interchangeable key.
+
+Output defaults to `out/exterior_tasks_<listingId>_<modelId>.json`. Open the
+matching model, switch to Vexcel, and choose **Import quiz JSON** to load that
+file. The quiz panel shows the source dataset, record, field path, and provenance
+under **CoStar evidence**. Manual annotations remain separate.
+
+The generator selects applicable tasks from garage, driveway/gate, fencing,
+private pool, community pool, roof, exterior material, outdoor space, building
+context, and missing-information reviews. Each task links to the document's
+`facts` through `refs.factIds`; each quiz point carries its evidence so source
+information survives import and export. Missing feature records still allow
+sourced building context and an explicit unknown-information checkpoint.
+
+Unlocated tasks appear in the **Property tasks** checklist with no map marker.
+Old generated files with the fixed training-layout offsets are migrated to this
+checklist on import. Use **Place on image** / **Move marker** to set reviewed
+positions, or generate candidate feature positions with the Vexcel lookup below. Hydrant/FDC/shutoff locations,
+structural condition, and current access conditions remain unknown. Private and
+community pools stay distinct; brick exterior is not treated as structural
+masonry, and a generic residential sprinkler feature is not treated as fire
+suppression. Explicit false features are excluded. Missing data remains unknown;
+zero parking counts remain zero. The generator does not infer operational hazard
+severity from these records.
+
+Additional options: `--output PATH`, `--max-tasks 1..10`, `--kit-dir PATH`, and
+`--include-inferred-features`. By default it uses MLS/research features; the last
+option also includes features marked `MachineLearning` or `ComputerVision`, with
+that provenance retained. Derived numeric summaries retain their `Derived` origin.
+
+Validation:
+
+```bash
+python3 -m unittest -v test_generate_exterior_tasks.py test_exterior_spatial.py
+npm test
+npm run build
+```
+
+
+### Exterior feature placement
+
+```bash
+python3 generate_exterior_tasks.py --model-id Ki9YdfpNKum --locate-vexcel
+```
+
+This option uses `VEXCEL_API_KEY` from the environment or `.env` to send the
+property coordinates to Vexcel `property/extract`, then a bounded crop to
+`elements/detect`. Unlike offline task generation, it makes authenticated network
+requests. It selects a dated ortho capture with a real parcel containing the
+address. The roof pin uses a subject-building footprint, and detections for
+applicable garages, driveways, private pools, and patios must be unambiguous,
+confident, and inside that parcel. Unsupported, ambiguous, or unavailable features
+remain in the checklist. Fences and gates are not assumed detectable from overhead
+imagery. Community amenities and missing-information tasks are not pinned to the
+home lot.
+
+Pins from automated geometry/detection are labeled **candidates** and should be
+checked against the displayed imagery, which can differ in capture date. The
+property API may return multiple captures even for a point query; the code checks
+containment and dates rather than trusting the first feature. If Vexcel cannot
+establish a suitable parcel, no neighbor or nearby building is substituted.
+The live adapter follows the public API schema; its response handling needs a
+live check with the configured key before relying on automatic placement.
+
+Reviewed positions can also be supplied offline with `--anchors-file PATH`:
+
+```json
+{
+  "modelId": "Ki9YdfpNKum",
+  "anchors": {
+    "roof": {
+      "east": 0,
+      "north": 0,
+      "status": "reviewed",
+      "source": "Reviewed aerial image"
+    }
+  }
+}
+```
+
+Those numbers illustrate the file structure, not reviewed coordinates for this
+model. Categories are `roof`, `garage`, `access`, `private-pool`, `outdoor`, and the
+other task category keys in the generated JSON. Only provide coordinates actually
+supported by a reviewed source. Exporting from the Vexcel UI also retains reviewed
+positions and source evidence.

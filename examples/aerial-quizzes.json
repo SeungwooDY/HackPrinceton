@@ -5,8 +5,9 @@
     {
       "id": "property-overview-v1",
       "label": "Property overview",
-      "east": 0,
-      "north": 0,
+      "east": null,
+      "north": null,
+      "placementStatus": "unlocated",
       "description": "Start with the property at the center of the aerial view.",
       "quiz": {
         "question": "Before planning work from an aerial image, how should you confirm the area you are assessing?",
@@ -22,8 +23,9 @@
     {
       "id": "access-review-v1",
       "label": "Access review",
-      "east": 48,
-      "north": -28,
+      "east": null,
+      "north": null,
+      "placementStatus": "unlocated",
       "description": "Use the surrounding imagery to begin reviewing possible site access.",
       "quiz": {
         "question": "What is the best next step when a route in the aerial image appears to lead onto the site?",
@@ -39,8 +41,9 @@
     {
       "id": "surroundings-review-v1",
       "label": "Surroundings review",
-      "east": -48,
-      "north": 28,
+      "east": null,
+      "north": null,
+      "placementStatus": "unlocated",
       "description": "Zoom out to review how the property relates to its surroundings.",
       "quiz": {
         "question": "Why review a wider aerial view before planning activity at the property?",

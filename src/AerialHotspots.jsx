@@ -20,6 +20,7 @@ export default function AerialHotspots({ modelId, width, disabled }) {
   const points = importedPoints || AERIAL_QUIZ_POINTS;
   const [importError, setImportError] = useState('');
   const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [movingQuizId, setMovingQuizId] = useState(null);
   const [answers, setAnswers] = useState(() => {
     try { return loadAerialQuizAnswers(localStorage, modelId, points); } catch { return {}; }
   });
@@ -30,12 +31,13 @@ export default function AerialHotspots({ modelId, width, disabled }) {
     setSelectedQuiz(null);
     setDraft(null);
     setPlacing(false);
+    setMovingQuizId(null);
     setAnswers({});
     setImportError('');
     try {
       saveAerialQuizPoints(localStorage, modelId, next);
       saveAerialQuizAnswers(localStorage, modelId, {});
-      setNotice(next ? `Imported ${next.length} quiz points. Zoom out if a point is outside this view.` : 'Restored default training quizzes.');
+      setNotice(next ? `Imported ${next.length} tasks. Only located tasks have map markers.` : 'Restored default training quizzes.');
     } catch { setNotice('Quiz points loaded for this session, but browser storage could not save them.'); }
   }
 
@@ -81,20 +83,41 @@ export default function AerialHotspots({ modelId, width, disabled }) {
   }
 
   function place(x, y) {
+    if (movingQuizId) {
+      const next = points.map(point => point.id === movingQuizId ? {
+        ...point, ...imageToOffset(x, y, width), placementStatus: 'reviewed',
+        placementNote: 'Position placed by a user on the displayed aerial image; verify current site conditions.',
+      } : point);
+      setImportedPoints(next);
+      setSelectedQuiz(next.find(point => point.id === movingQuizId));
+      setPlacing(false);
+      setMovingQuizId(null);
+      try { saveAerialQuizPoints(localStorage, modelId, next); setNotice('Saved the task position.'); }
+      catch { setNotice('Position updated for this session, but browser storage could not save it.'); }
+      return;
+    }
     setDraft({ id: crypto.randomUUID(), label: '', description: '', ...imageToOffset(x, y, width) });
     setPlacing(false);
   }
 
   return <>
     <div className="aerial-hotspot-actions">
-      <button disabled={disabled} onClick={() => { setPlacing(value => !value); setDraft(null); setSelectedQuiz(null); }}>{placing ? 'Cancel placement' : '+ Add hotspot'}</button>
+      <button disabled={disabled} onClick={() => { setPlacing(value => !value); setDraft(null); setSelectedQuiz(null); setMovingQuizId(null); }}>{placing ? 'Cancel placement' : '+ Add hotspot'}</button>
       <label className="aerial-quiz-import">Import quiz JSON<input type="file" accept=".json,application/json" disabled={disabled} onChange={importPoints}/></label>
       <button disabled={disabled} onClick={downloadPoints}>Export quiz JSON</button>
       {importedPoints && <button disabled={disabled} onClick={() => replacePoints(null)}>Use default quizzes</button>}
       <span className="aerial-quiz-progress" role="status">Quizzes: {completed}/{points.length} correct</span>
-      {placing && <span role="status">Click the image to place a hotspot, or focus the image and press Enter for its center.</span>}
+      {placing && <span role="status">{movingQuizId ? 'Click the actual feature to position this task. Press Escape to cancel.' : 'Click the image to place a hotspot, or focus the image and press Enter for its center.'}</span>}
       {importError && <span role="alert">{importError}</span>}
       {notice && <span role="status">{notice}</span>}
+      <details className="aerial-property-tasks" open={points.some(point => point.placementStatus === 'unlocated' || point.east === null)}>
+        <summary>Property tasks ({points.length})</summary>
+        <p>Tasks without a feature location stay in this list.</p>
+        <div>{points.map((point, index) => <button key={point.id} type="button" onClick={() => { setSelectedQuiz(point); setDraft(null); setPlacing(false); setMovingQuizId(null); }}>
+          <span>{gradeTagAnswer(point, answers[point.id]) === true ? '✓' : index + 1}. {point.label}</span>
+          <small>{point.placementStatus === 'unlocated' || point.east === null ? 'Location not set' : point.placementStatus === 'candidate' ? 'Detected candidate · review' : 'Position set'}</small>
+        </button>)}</div>
+      </details>
     </div>
     {placing && <div className="aerial-placement-surface" role="button" tabIndex={0} aria-label="Place hotspot on aerial image" onClick={event => {
       const bounds = event.currentTarget.getBoundingClientRect();
@@ -104,15 +127,16 @@ export default function AerialHotspots({ modelId, width, disabled }) {
       if (event.key === 'Escape') setPlacing(false);
     }}/>} 
     {points.map((point, index) => {
+      if (point.placementStatus === 'unlocated' || point.east === null || point.north === null) return null;
       const { x, y } = offsetToImage(point, width);
       if (x < 0 || x > 1 || y < 0 || y > 1) return null;
       const correct = gradeTagAnswer(point, answers[point.id]);
-      return <button key={point.id} className={`aerial-hotspot aerial-quiz-hotspot ${correct === true ? 'is-complete' : ''}`} style={{ left: `${x * 100}%`, top: `${y * 100}%` }} title={point.label}
+      return <button key={point.id} className={`aerial-hotspot aerial-quiz-hotspot ${point.placementStatus === 'candidate' ? 'is-candidate' : ''} ${correct === true ? 'is-complete' : ''}`} style={{ left: `${x * 100}%`, top: `${y * 100}%` }} title={point.label}
         aria-label={`Open quiz: ${point.label}${correct === true ? ', completed' : ''}`} onClick={() => { setSelectedQuiz(point); setDraft(null); setPlacing(false); }}>
         <span aria-hidden="true">{correct === true ? '✓' : index + 1}</span><span className="aerial-hotspot-label">{point.label}</span>
       </button>;
     })}
-    {selectedQuiz && <AerialQuizPanel imported={Boolean(importedPoints)} key={selectedQuiz.id} point={selectedQuiz} selectedIndex={answers[selectedQuiz.id]} onAnswer={index => saveAnswer(selectedQuiz, index)} onRetry={() => saveAnswer(selectedQuiz, undefined)} onClose={() => setSelectedQuiz(null)}/>}
+    {selectedQuiz && <AerialQuizPanel imported={Boolean(importedPoints)} key={selectedQuiz.id} point={selectedQuiz} selectedIndex={answers[selectedQuiz.id]} onAnswer={index => saveAnswer(selectedQuiz, index)} onRetry={() => saveAnswer(selectedQuiz, undefined)} onClose={() => setSelectedQuiz(null)} onPlace={() => { setMovingQuizId(selectedQuiz.id); setSelectedQuiz(null); setDraft(null); setPlacing(true); }}/>}
     {tags.map(tag => {
       const { x, y } = offsetToImage(tag, width);
       if (x < 0 || x > 1 || y < 0 || y > 1) return null;
