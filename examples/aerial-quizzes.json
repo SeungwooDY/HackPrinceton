@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "modelId": "MBnYBa7whdC",
+  "points": [
+    {
+      "id": "property-overview-v1",
+      "label": "Property overview",
+      "east": 0,
+      "north": 0,
+      "description": "Start with the property at the center of the aerial view.",
+      "quiz": {
+        "question": "Before planning work from an aerial image, how should you confirm the area you are assessing?",
+        "options": [
+          "Assume the image edges show the legal property boundary.",
+          "Confirm the property location and boundaries using verified site information.",
+          "Treat every nearby building as part of the same property."
+        ],
+        "correctIndex": 1
+      },
+      "explanation": "The image is centered on address coordinates. Its edges and the checkpoint markers do not define property boundaries."
+    },
+    {
+      "id": "access-review-v1",
+      "label": "Access review",
+      "east": 48,
+      "north": -28,
+      "description": "Use the surrounding imagery to begin reviewing possible site access.",
+      "quiz": {
+        "question": "What is the best next step when a route in the aerial image appears to lead onto the site?",
+        "options": [
+          "Confirm the entrance, permissions, and current route conditions with site information.",
+          "Assume the route is open because it is visible.",
+          "Choose the shortest route without checking restrictions."
+        ],
+        "correctIndex": 0
+      },
+      "explanation": "Aerial imagery can suggest a route, but it does not establish that an entrance is open, permitted, or suitable today."
+    },
+    {
+      "id": "surroundings-review-v1",
+      "label": "Surroundings review",
+      "east": -48,
+      "north": 28,
+      "description": "Zoom out to review how the property relates to its surroundings.",
+      "quiz": {
+        "question": "Why review a wider aerial view before planning activity at the property?",
+        "options": [
+          "It replaces checking current conditions on site.",
+          "It proves every visible area is available for storage.",
+          "It helps identify nearby roads, buildings, and other areas that need further review."
+        ],
+        "correctIndex": 2
+      },
+      "explanation": "A wider view provides context for planning. Follow up on visible features with current, verified site information."
+    }
+  ]
+}
