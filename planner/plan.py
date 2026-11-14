@@ -68,7 +68,8 @@ def _check_mustfollow(tasks) -> None:
 
 
 def plan(graph: SweepGraph, drill: TaskList, settings: Settings = DEFAULT_SETTINGS,
-         *, max_edge_meters: Optional[float] = None, same_floor: bool = False) -> RoutePlan:
+         *, max_edge_meters: Optional[float] = None, same_floor: bool = False,
+         auto_complete_start: bool = True) -> RoutePlan:
     sc = drill.scenario
     _check_mustfollow(drill.tasks)
 
@@ -78,8 +79,10 @@ def plan(graph: SweepGraph, drill: TaskList, settings: Settings = DEFAULT_SETTIN
     start_room = sweep_room.get(start)
 
     # A search task whose room contains the start is done at time 0; it drops out.
+    # For quiz drills every question must be visited/answered, so callers pass
+    # auto_complete_start=False to keep a start-room task in the order (0 m leg).
     prestarted = {t.id for t in drill.tasks
-                  if t.type == "search" and t.roomId == start_room}
+                  if auto_complete_start and t.type == "search" and t.roomId == start_room}
     tasks = [t for t in drill.tasks if t.id not in prestarted]
 
     anchors = {t.id: anchor_of(graph, t.roomId) for t in tasks}

@@ -202,3 +202,24 @@ button:disabled { cursor: default; opacity: .5; }
 .demo-file-status { margin: 0; padding: 12px 24px; color: #ccc; border-bottom: 1px solid #333; }
 .custom-task-file > summary { padding: 12px 24px; color: #aaa; cursor: pointer; }
 @media(max-width:600px) { .demo-file-status, .custom-task-file > summary { padding-left:16px; padding-right:16px; } }
+
+/* Post-drill debrief + replay */
+.debrief-overlay { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: rgba(17, 15, 13, 0.55); }
+.debrief-card { position: relative; width: min(420px, 92vw); background: #faf8f5; color: #292524; border-top: 4px solid #b47746; border-radius: 8px; padding: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.35); font: 14px/1.5 system-ui, sans-serif; }
+.debrief-card h2 { margin: 0 0 12px; font-size: 20px; }
+.debrief-close { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border: 0; background: none; font-size: 20px; color: #785b42; cursor: pointer; }
+.debrief-score { font-size: 16px; margin: 0 0 16px; }
+.debrief-score strong { font-size: 28px; color: #825735; }
+.debrief-score span { color: #8a7763; }
+.debrief-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 16px; }
+.debrief-stats div { background: #f1e9df; border-radius: 6px; padding: 10px; text-align: center; }
+.debrief-stats dt { color: #785b42; font-size: 12px; }
+.debrief-stats dd { margin: 4px 0 0; font-size: 16px; font-weight: 600; color: #433a32; }
+.debrief-note { color: #8b562c; background: #f7ead8; border-left: 2px solid #c3996c; padding: 8px 10px; font-size: 13px; margin: 0 0 16px; }
+.debrief-actions { display: flex; gap: 8px; }
+.debrief-actions button { flex: 1; padding: 10px; border: 1px solid #8b633e; background: #986b42; color: #fffdf8; border-radius: 4px; cursor: pointer; }
+.debrief-actions button:hover:not(:disabled) { background: #825735; }
+.debrief-actions button:disabled { opacity: 0.45; cursor: default; }
+
+/* "Return to entrance" prompt (drill egress) */
+.return-prompt { position: fixed; left: 50%; top: 16px; transform: translateX(-50%); z-index: 9999; background: #986b42; color: #fffdf8; padding: 12px 20px; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.35); font-weight: 600; max-width: 92vw; text-align: center; }

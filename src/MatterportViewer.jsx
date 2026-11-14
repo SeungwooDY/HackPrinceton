@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ModelTags from './ModelTags.jsx';
+import DrillDebrief from './DrillDebrief.jsx';
 
 export default function MatterportViewer({ modelId, importedFile }) {
   const frame = useRef(null);
@@ -11,6 +12,65 @@ export default function MatterportViewer({ modelId, importedFile }) {
   const [retry, setRetry] = useState(0);
   const [connectedSdk, setConnectedSdk] = useState(null);
   const [overlayTarget, setOverlayTarget] = useState(null);
+  // Drill lifecycle: active -> returning (all answered, go to exit) -> debrief -> done.
+  const [phase, setPhase] = useState('active');
+  const [summary, setSummary] = useState(null);
+  const [plan, setPlan] = useState(null);
+  const trail = useRef([]);
+  const debriefTrail = useRef([]);
+  const phaseRef = useRef('active');
+  const exitSweepRef = useRef(null);
+
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
+
+  // Reset the drill lifecycle whenever the model changes.
+  useEffect(() => {
+    setPhase('active'); phaseRef.current = 'active';
+    setSummary(null); setPlan(null); exitSweepRef.current = null; trail.current = [];
+  }, [modelId]);
+
+  // Record the trainee's path (one entry per distinct sweep), and once they're
+  // in the "returning" phase, complete the drill when they reach the exit sweep.
+  useEffect(() => {
+    if (!connectedSdk) return undefined;
+    const sub = connectedSdk.Sweep.current.subscribe(cur => {
+      if (!cur?.sid) return;
+      const last = trail.current[trail.current.length - 1];
+      if (!last || last.sweepId !== cur.sid) trail.current.push({ sweepId: cur.sid, position: cur.position, t: Date.now() });
+      if (phaseRef.current === 'returning' && exitSweepRef.current && cur.sid === exitSweepRef.current) {
+        debriefTrail.current = trail.current.slice();
+        phaseRef.current = 'debrief';
+        setPhase('debrief');
+      }
+    });
+    return () => sub?.cancel?.();
+  }, [connectedSdk]);
+
+  // All questions answered -> enter "returning" and fetch the route's exit sweep.
+  const handleComplete = useCallback(s => {
+    setSummary(prev => prev || s);
+    setPhase(prev => (prev === 'active' ? 'returning' : prev));
+  }, []);
+
+  useEffect(() => {
+    if (phase !== 'returning') return undefined;
+    let live = true;
+    fetch(`/api/plan?model=${encodeURIComponent(modelId)}`)
+      .then(r => r.json())
+      .then(p => {
+        if (!live) return;
+        setPlan(p);
+        exitSweepRef.current = p.exitSweepId || null;
+        // No exit to return to -> finish immediately.
+        if (!exitSweepRef.current) {
+          debriefTrail.current = trail.current.slice();
+          phaseRef.current = 'debrief';
+          setPhase('debrief');
+        }
+      })
+      .catch(() => {});
+    return () => { live = false; };
+  }, [phase, modelId]);
 
   useEffect(() => {
     let active = true;
@@ -123,7 +183,9 @@ export default function MatterportViewer({ modelId, importedFile }) {
         </dl>
       </details>
       {error && <p className="error" role="alert">{error}</p>}
-      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })}/>}
+      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })} onComplete={handleComplete}/>}
+      {phase === 'returning' && <div className="return-prompt" role="status">All tasks complete — return to the entrance to finish the drill.</div>}
+      {phase === 'debrief' && connectedSdk && <DrillDebrief sdk={connectedSdk} modelId={modelId} score={summary?.score} maxScore={summary?.maxScore} trail={debriefTrail.current} plan={plan} onClose={() => setPhase('done')}/>}
       <div className="viewer-viewport">
         <iframe ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
         <div className="sweep-question-layer" ref={setOverlayTarget}/>

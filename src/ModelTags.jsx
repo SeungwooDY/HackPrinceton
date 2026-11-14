@@ -7,7 +7,7 @@ import { resolveTask } from './taskImport.js';
 import SweepQuestions from './SweepQuestions.jsx';
 import { questionsAtSweep, sweepIds } from './sweepQuestions.js';
 
-export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, overlayTarget }) {
+export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, overlayTarget, onComplete }) {
   const [tags, setTags] = useState([]);
   const [label, setLabel] = useState('Training point');
   const [description, setDescription] = useState('Inspect this location.');
@@ -200,6 +200,19 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     const first = saved.current.find(tag => tag.id === available[0].task.id);
     if (first && !activatedDemo.current.navigated) {activatedDemo.current.navigated = true;goToTask(first);}
   }, [importedFile, busy, sweeps, modelId]);
+
+  // Drill complete when every imported quiz question has been answered.
+  useEffect(() => {
+    if (!onComplete) return;
+    const quizTags = tags.filter(tag => tag.importedTask && tag.quiz);
+    if (quizTags.length && quizTags.every(tag => tag.quizResult != null)) {
+      onComplete({
+        score: quizTags.reduce((sum, tag) => sum + (tag.quizPoints ?? 0), 0),
+        maxScore: quizTags.length * 3,
+        count: quizTags.length,
+      });
+    }
+  }, [tags, onComplete]);
 
   async function goToTask(tag) {
     try {
