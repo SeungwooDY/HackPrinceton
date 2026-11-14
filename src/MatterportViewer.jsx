@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import ModelTags from './ModelTags.jsx';
 
 export default function MatterportViewer({ modelId }) {
   const frame = useRef(null);
@@ -8,6 +9,7 @@ export default function MatterportViewer({ modelId }) {
   const [rooms, setRooms] = useState([]);
   const [roomStatus, setRoomStatus] = useState('waiting');
   const [retry, setRetry] = useState(0);
+  const [connectedSdk, setConnectedSdk] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -23,6 +25,7 @@ export default function MatterportViewer({ modelId }) {
     setSweep(null);
     setRooms([]);
     setRoomStatus('waiting');
+    setConnectedSdk(null);
 
     async function initialize() {
       try {
@@ -63,6 +66,7 @@ export default function MatterportViewer({ modelId }) {
                 setRoomStatus('unavailable');
               }
             }
+            if (active) setConnectedSdk(sdk);
           } catch {
             if (active) {
               clearTimeout(timer);
@@ -95,22 +99,30 @@ export default function MatterportViewer({ modelId }) {
     <section className="viewer">
       <div className="status-bar" role="status">
         <span>{error ? 'Connection needs attention' : status}</span>
-        <span>{sweep ? `Floor index: ${sweep.floor ?? 'unknown'} · Sweep: ${sweep.id}` : `Model: ${modelId}`}</span>
-        <button onClick={() => setRetry(value => value + 1)}>Reload</button>
+        <button onClick={() => setRetry(value => value + 1)}>Reload viewer</button>
       </div>
       <div className="room-status" role="status" aria-live="polite" aria-atomic="true">
-        <strong>{rooms.length > 1 ? 'Current rooms:' : 'Current room:'}</strong>
+        <strong>{rooms.length > 1 ? 'Current rooms' : 'Current room'}</strong>
         {error ? <span>Unavailable while disconnected</span>
           : roomStatus === 'unavailable' ? <span>Room tracking unavailable for this model or SDK</span>
           : roomStatus === 'waiting' ? <span>Waiting for room data…</span>
           : rooms.length ? rooms.map((room, index) => (
-            <span className="room-label" key={room.id || index} title={`Room ID: ${room.id || 'unknown'}`}>
+            <span className="room-name" key={room.id || index} title={`Room ID: ${room.id || 'unknown'}`}>
               {room.label?.trim() || 'Unlabeled room'}
-              <code>{room.id || 'No room ID'}</code>
             </span>
           )) : <span>No room reported at this viewpoint</span>}
       </div>
+      <details className="viewpoint-details">
+        <summary>Viewpoint details</summary>
+        <dl>
+          <div><dt>Model ID</dt><dd><code>{modelId}</code></dd></div>
+          <div><dt>SDK floor index</dt><dd>{sweep?.floor ?? 'Unavailable'}</dd></div>
+          <div><dt>Sweep ID</dt><dd><code>{sweep?.id || 'Unavailable'}</code></dd></div>
+          <div><dt>Room IDs</dt><dd><code>{error ? 'Unavailable' : rooms.length ? rooms.map(room => room.id || 'Unknown').join(', ') : 'Unavailable'}</code></dd></div>
+        </dl>
+      </details>
       {error && <p className="error" role="alert">{error}</p>}
+      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId}/>}
       <iframe ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
     </section>
   );
