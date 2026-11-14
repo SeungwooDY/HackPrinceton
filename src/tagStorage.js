@@ -14,6 +14,20 @@ export function gradeTagAnswer(tag, selectedIndex) {
   return selectedIndex === quiz.correctIndex;
 }
 
+function importedMetadata(value) {
+  if (!value || typeof value !== 'object' || typeof value.modelId !== 'string' || typeof value.sweepId !== 'string') return null;
+  const safeText = input => typeof input === 'string' ? input.slice(0, 1000) : '';
+  return {
+    fileName: safeText(value.fileName), taskId: safeText(value.taskId), taskPath: safeText(value.taskPath),
+    propertyId: ['string', 'number'].includes(typeof value.propertyId) ? value.propertyId : null,
+    floorId: ['string', 'number'].includes(typeof value.floorId) ? value.floorId : null,
+    modelId: safeText(value.modelId), sweepId: safeText(value.sweepId), type: safeText(value.type),
+    mappingStatus: 'unverified', placement: safeText(value.placement), quizOrigin: safeText(value.quizOrigin),
+    warnings: Array.isArray(value.warnings) ? value.warnings.filter(item => typeof item === 'string').map(safeText).slice(0, 10) : [],
+    evidence: Array.isArray(value.evidence) ? value.evidence.filter(item => item && typeof item.path === 'string').slice(0, 10).map(item => ({ path: safeText(item.path), value: ['string', 'number', 'boolean'].includes(typeof item.value) ? item.value : null })) : [],
+  };
+}
+
 export function loadTags(storage, modelId) {
   const data = JSON.parse(storage.getItem(keyFor(modelId)) || '[]');
   if (!Array.isArray(data)) throw new Error('Saved tags are not a list.');
@@ -27,6 +41,7 @@ export function loadTags(storage, modelId) {
     description: typeof tag.description === 'string' ? tag.description.slice(0, 1000) : '',
     anchorPosition: { ...tag.anchorPosition }, stemVector: { ...tag.stemVector }, reviewed: tag.reviewed === true,
     quiz: normalizeQuiz(tag.quiz), quizResult: ['correct', 'incorrect'].includes(tag.quizResult) ? tag.quizResult : null,
+    importedTask: importedMetadata(tag.importedTask),
   }));
 }
 

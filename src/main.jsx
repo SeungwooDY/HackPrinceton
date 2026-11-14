@@ -1,25 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import MatterportViewer from './MatterportViewer.jsx';
-import { installExporter } from './exportSweepGraph.js';
-import { installExitMarker } from './exitMarker.js';
+import TaskFileInput from './TaskFileInput.jsx';
+import demoTasks from './demo-tasks.json';
+import { parseTaskDocument } from './taskImport.js';
 import './styles.css';
 
-// Exposes window.exportSweepGraph() — run it in the console after a model loads
-// to download the SweepGraph JSON for the planner. installExitMarker() adds an
-// on-screen panel to mark door/window sweeps and download the graph with exits[].
-installExporter();
-installExitMarker();
-
-const DEFAULT_MODEL = 'KBqHB8Xq9Vo';
+const DEMO_FILE = { ...parseTaskDocument(demoTasks, 'demo-tasks.json'), autoActivate: true };
+const DEFAULT_MODEL = DEMO_FILE.models[0];
 const MODEL_ID = /^[a-zA-Z0-9]{11}$/;
 const requestedModel = new URLSearchParams(window.location.search).get('model');
-const initialModel = MODEL_ID.test(requestedModel || '') ? requestedModel : DEFAULT_MODEL;
+const initialModel = DEMO_FILE.models.includes(requestedModel) ? requestedModel : DEFAULT_MODEL;
 
 function App() {
   const [modelId, setModelId] = useState(initialModel);
   const [input, setInput] = useState(initialModel);
   const [error, setError] = useState('');
+  const [importedFile, setImportedFile] = useState(DEMO_FILE);
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('model', modelId);
+    window.history.replaceState({}, '', url);
+  }, [modelId]);
+
+  function selectModel(next) {
+    if (!MODEL_ID.test(next)) return;
+    setInput(next);
+    setError('');
+    setModelId(next);
+    const url = new URL(window.location.href);
+    url.search = '';
+    url.searchParams.set('model', next);
+    window.history.replaceState({}, '', url);
+  }
 
   function loadModel(event) {
     event.preventDefault();
@@ -28,12 +41,7 @@ function App() {
       setError('Enter an 11-character Matterport model ID.');
       return;
     }
-    setError('');
-    setModelId(next);
-    const url = new URL(window.location.href);
-    url.search = '';
-    url.searchParams.set('model', next);
-    window.history.replaceState({}, '', url);
+    selectModel(next);
   }
 
   return (
@@ -51,7 +59,9 @@ function App() {
         </form>
         {error && <p className="field-error" id="model-error" role="alert">{error}</p>}
       </div>
-      <MatterportViewer key={modelId} modelId={modelId}/>
+      <p className="demo-file-status">{importedFile?.autoActivate ? 'Demo mode: two questions load automatically from src/demo-tasks.json. The viewer moves to the first checkpoint once sweep data is ready.' : 'Using a custom task file.'}</p>
+      <details className="custom-task-file"><summary>Use a different task file</summary><TaskFileInput importedFile={importedFile} onImport={setImportedFile} onClear={() => setImportedFile(null)} modelId={modelId} onModelChange={selectModel}/></details>
+      <MatterportViewer key={modelId} modelId={modelId} importedFile={importedFile}/>
     </main>
   );
 }

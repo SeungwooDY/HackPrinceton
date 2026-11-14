@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import ModelTags from './ModelTags.jsx';
 import { installQuizTags } from './quizTags.js';
 
-export default function MatterportViewer({ modelId }) {
+export default function MatterportViewer({ modelId, importedFile }) {
   const frame = useRef(null);
   const [status, setStatus] = useState('Loading viewer…');
   const [error, setError] = useState('');
@@ -11,6 +11,7 @@ export default function MatterportViewer({ modelId }) {
   const [roomStatus, setRoomStatus] = useState('waiting');
   const [retry, setRetry] = useState(0);
   const [connectedSdk, setConnectedSdk] = useState(null);
+  const [overlayTarget, setOverlayTarget] = useState(null);
 
   // Bridge: once the SDK is connected, auto-place the generated quiz items for
   // this model as graded tags. Cleans them up on model change / unmount.
@@ -142,8 +143,11 @@ export default function MatterportViewer({ modelId }) {
         </dl>
       </details>
       {error && <p className="error" role="alert">{error}</p>}
-      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId}/>}
-      <iframe ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
+      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })}/>}
+      <div className="viewer-viewport">
+        <iframe ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
+        <div className="sweep-question-layer" ref={setOverlayTarget}/>
+      </div>
     </section>
   );
 }
