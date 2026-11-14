@@ -5,4 +5,4 @@ dist/
 out/
 
 # Large CoStar data files (local-only, not tracked on GitHub)
-costar-hackathon-kit/data/
+costar-hackathon-kit/
