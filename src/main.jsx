@@ -11,7 +11,7 @@ import './styles.css';
 installExporter();
 installExitMarker();
 
-const DEFAULT_MODEL = '85RkQcGH3oE';
+const DEFAULT_MODEL = 'KBqHB8Xq9Vo';
 const MODEL_ID = /^[a-zA-Z0-9]{11}$/;
 const requestedModel = new URLSearchParams(window.location.search).get('model');
 const initialModel = MODEL_ID.test(requestedModel || '') ? requestedModel : DEFAULT_MODEL;
@@ -38,15 +38,19 @@ function App() {
 
   return (
     <main className="app">
-      <header className="toolbar">
-        <h1>Matterport viewer</h1>
-        <form onSubmit={loadModel}>
-          <label htmlFor="model-id">Model ID</label>
-          <input id="model-id" value={input} onChange={event => setInput(event.target.value)} spellCheck="false" autoComplete="off" aria-invalid={Boolean(error)} aria-describedby={error ? 'model-error' : undefined}/>
+      <header className="app-header">
+        <p className="app-title">Matterport viewer</p>
+      </header>
+      <div className="model-controls">
+        <form onSubmit={loadModel} aria-label="Select model">
+          <div className="model-field">
+            <label htmlFor="model-id">Model ID</label>
+            <input id="model-id" value={input} onChange={event => setInput(event.target.value)} spellCheck="false" autoComplete="off" aria-invalid={Boolean(error)} aria-describedby={error ? 'model-error' : undefined}/>
+          </div>
           <button type="submit">Load model</button>
         </form>
-      </header>
-      {error && <p className="error" id="model-error" role="alert">{error}</p>}
+        {error && <p className="field-error" id="model-error" role="alert">{error}</p>}
+      </div>
       <MatterportViewer key={modelId} modelId={modelId}/>
     </main>
   );
