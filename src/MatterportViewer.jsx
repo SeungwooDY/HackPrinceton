@@ -10,6 +10,7 @@ export default function MatterportViewer({ modelId, importedFile }) {
   const [roomStatus, setRoomStatus] = useState('waiting');
   const [retry, setRetry] = useState(0);
   const [connectedSdk, setConnectedSdk] = useState(null);
+  const [overlayTarget, setOverlayTarget] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -122,8 +123,11 @@ export default function MatterportViewer({ modelId, importedFile }) {
         </dl>
       </details>
       {error && <p className="error" role="alert">{error}</p>}
-      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })}/>}
-      <iframe ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
+      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })}/>}
+      <div className="viewer-viewport">
+        <iframe ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
+        <div className="sweep-question-layer" ref={setOverlayTarget}/>
+      </div>
     </section>
   );
 }

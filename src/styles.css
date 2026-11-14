@@ -161,3 +161,40 @@ button:disabled { cursor: default; opacity: .5; }
 @media(max-width: 600px) { .task-file-input { padding: 16px; } .tag-list li { flex-wrap: wrap; } .tag-list li > div { flex-basis: 100%; } }
 .manual-tag-editor { margin-top: 16px; }
 .manual-tag-editor > p { margin: 12px 0; color: #aaa; }
+.hardcoded-barricade-status { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 16px; padding: 0 24px 12px; color: #aaa; }
+.hardcoded-barricade-status strong { font-weight: 500; color: #e1bf76; }
+@media(max-width:600px) { .hardcoded-barricade-status { padding-left:16px; padding-right:16px; } }
+
+.viewer-viewport { position: relative; display: flex; flex: 1; min-height: max(400px, 65dvh); }
+.viewer-viewport > iframe { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; }
+.sweep-question-layer { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.sweep-question-panel { position: absolute; top: 16px; right: 16px; width: min(360px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; pointer-events: auto; padding: 16px; border: 1px solid #bca88b; border-radius: 4px; background: #faf8f5; color: #292524; color-scheme: light; }
+.sweep-question-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid #d6cdc0; color: #785b42; font-size: 13px; }
+.sweep-question-heading > button { min-height: 28px; padding: 0 6px; border: 0; background: transparent; color: #785b42; font-size: 22px; }
+.sweep-task-title { font-size: 13px; color: #785b42; margin: 12px 0 8px; }
+.sweep-question-text { margin: 0 0 16px; font-size: 16px; line-height: 1.5; font-weight: 500; overflow-wrap: anywhere; }
+.sweep-answer-options { display: grid; gap: 8px; }
+.sweep-answer-options button { display: flex; gap: 12px; align-items: baseline; text-align: left; padding: 10px 12px; border: 1px solid #d6cdc0; background: #fffdf9; color: #433a32; overflow-wrap: anywhere; }
+.sweep-answer-options button:hover:not(:disabled) { background: #f1e9df; border-color: #a38b70; }
+.sweep-answer-options button:disabled { opacity: 1; }
+.sweep-answer-options button > span { color: #8a7763; font-size: 12px; }
+.sweep-answer-options .answer-correct { background: #e8efdf; border-color: #78916c; color: #365032; }
+.sweep-answer-options .answer-incorrect { background: #f7ead8; border-color: #c3996c; color: #8b562c; }
+.sweep-feedback { padding: 10px 12px; margin: 16px 0 4px; border-left: 2px solid #b9a58c; background: #eee8df; color: #6e5d4c; font-size: 13px; }
+.sweep-feedback.correct { background: #e8efdf; border-color: #78916c; color: #365032; }
+.sweep-feedback.incorrect { background: #f7ead8; border-color: #c3996c; color: #8b562c; }
+.sweep-text-button { padding: 8px 0; background: none; border: 0; color: #785b42; text-decoration: underline; }
+.sweep-text-button:hover { background: none; }
+.sweep-review-button { color: #fffdf8; background: #986b42; border-color: #8b633e; }
+.sweep-source { margin-top: 12px; color: #785b42; font-size: 12px; overflow-wrap: anywhere; }
+.sweep-source summary { cursor: pointer; }
+.sweep-source p { margin: 8px 0; }
+.sweep-source code { font-size: 11px; }
+.sweep-question-navigation { display: flex; justify-content: space-between; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid #d6cdc0; }
+.sweep-question-navigation button { background: #f1e9df; color: #785b42; border-color: #cbbbA4; font-size: 13px; }
+.sweep-task-select { display: grid; gap: 8px; margin-top: 12px; color: #785b42; font-size: 13px; }
+.sweep-task-select select { width: 100%; min-height: 36px; padding: 6px; border: 1px solid #cbbba4; border-radius: 4px; background: #fffdf9; color: #433a32; font: inherit; }
+@media(max-width:600px) { .sweep-question-panel { top: auto; bottom: 12px; right: 12px; width: calc(100% - 24px); max-height: 65%; } }
+.demo-file-status { margin: 0; padding: 12px 24px; color: #ccc; border-bottom: 1px solid #333; }
+.custom-task-file > summary { padding: 12px 24px; color: #aaa; cursor: pointer; }
+@media(max-width:600px) { .demo-file-status, .custom-task-file > summary { padding-left:16px; padding-right:16px; } }

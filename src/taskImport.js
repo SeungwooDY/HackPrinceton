@@ -116,9 +116,9 @@ export function parseTaskDocument(input, fileName = 'Imported tasks') {
 
 export function resolveTask(task, modelId, sweeps, existingIds = new Set()) {
   if (task.modelId !== modelId) return { status: 'other-model', reason: `Requires model ${task.modelId}` };
-  if (existingIds.has(task.id)) return { status: 'existing', reason: 'Already imported' };
   const sweep = sweeps.get(task.sweepId);
   if (!sweep || sweep.enabled === false) return { status: 'missing-sweep', reason: 'Sweep not found among enabled sweeps in this model' };
+  if (existingIds.has(task.id)) return { status: 'existing', reason: 'Already imported' };
   const anchorPosition = task.anchorPosition || (isVector(sweep.puckPosition) ? { ...sweep.puckPosition } : null);
   if (!anchorPosition) return { status: 'missing-position', reason: 'No sweep floor position; supply location.anchorPosition or place manually' };
   return { status: 'ready', reason: task.anchorPosition ? 'File coordinates · unverified mapping' : 'Sweep checkpoint · unverified mapping',
