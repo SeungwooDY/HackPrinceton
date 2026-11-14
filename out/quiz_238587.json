@@ -1,0 +1,155 @@
+{
+  "propertyId": 238587,
+  "quizItems": [
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Hallway",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "LbLLavc5rFG",
+      "sweepId": "ftn7wqwxnh6rccbdh4c5qah2b",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "h26t7ky77ew74yb0pg8qqf5rd",
+      "roomLabel": "Other",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "LbLLavc5rFG",
+      "sweepId": "gcyn82zi653rexs7mqg3f8k1d",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Other",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "LbLLavc5rFG",
+      "sweepId": "wgf8wfquya9i72ernaxze54gc",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "xy2x8mpaaqknp7q2c3nnbw1ma",
+      "roomLabel": "Other",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "gFYGjbwQzcd",
+      "sweepId": "zmas2xgeq1i9f7xswd3pt333a",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "tt6gm2a0463x9wmnx7rn6gugc",
+      "roomLabel": "Laundry",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "gFYGjbwQzcd",
+      "sweepId": "1dyqmyd8i3n0isfz6esfmtand",
+      "quizCategory": "utility",
+      "scenario": "You find the gas meter here with the shutoff valve partially obstructed by stored boxes.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Clear access and shut off the gas supply."
+        },
+        {
+          "rank": "second_best",
+          "text": "Shut off the gas without fully clearing access, if reachable."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Report the obstruction and move on without acting."
+        },
+        {
+          "rank": "worst",
+          "text": "Leave it for another crew without flagging it."
+        }
+      ],
+      "rationale": "An obstructed utility shutoff delays a critical life-safety action for the whole unit; leaving it unflagged is worst.",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}

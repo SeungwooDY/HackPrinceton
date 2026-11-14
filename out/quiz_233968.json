@@ -1,0 +1,65 @@
+{
+  "propertyId": 233968,
+  "quizItems": [
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Lobby, Living",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "RW7cKwVEpiJ",
+      "sweepId": "c2utiwdn2td9kwkzk6ke63pqb",
+      "quizCategory": "lobby",
+      "scenario": "A receptionist's desk has a phone off the hook and a half-finished drink.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; the receptionist may be deeper in the building."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and continue the planned search pattern."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Assume the receptionist already left through the front door."
+        },
+        {
+          "rank": "worst",
+          "text": "Disregard the desk entirely as irrelevant."
+        }
+      ],
+      "rationale": "Signs of a hastily-abandoned post suggest the occupant went further in rather than out; assuming they safely left is the riskiest read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Lobby",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "RW7cKwVEpiJ",
+      "sweepId": "mmucah4mc3utw5tri5f65hffd",
+      "quizCategory": "lobby",
+      "scenario": "A receptionist's desk has a phone off the hook and a half-finished drink.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; the receptionist may be deeper in the building."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and continue the planned search pattern."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Assume the receptionist already left through the front door."
+        },
+        {
+          "rank": "worst",
+          "text": "Disregard the desk entirely as irrelevant."
+        }
+      ],
+      "rationale": "Signs of a hastily-abandoned post suggest the occupant went further in rather than out; assuming they safely left is the riskiest read.",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "propertyId": 234683,
+  "quizItems": [
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Corridor",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "4HiyM1Eqfce",
+      "sweepId": "ra3sn5iz3b9mpdbu6ideedzuc",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}

@@ -1,0 +1,455 @@
+{
+  "propertyId": 120125,
+  "quizItems": [
+    {
+      "roomId": "xy2x8mpaaqknp7q2c3nnbw1ma",
+      "roomLabel": "Bedroom",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5LSByZUGBkU",
+      "sweepId": "fiu33ny0cfe3w5e3qmxnss3rd",
+      "quizCategory": "bedroom",
+      "scenario": "You find a child and a grandmother sharing this bedroom. Both are conscious; the grandmother cannot stand without help.",
+      "question": "Who do you assist out, in priority order?",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Grandmother first, then guide the child out right behind her."
+        },
+        {
+          "rank": "second_best",
+          "text": "Child first, then come back for the grandmother."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Try to carry both at once."
+        },
+        {
+          "rank": "worst",
+          "text": "Tell both to wait while you search the rest of the room."
+        }
+      ],
+      "rationale": "editorial-default:assist-least-mobile-occupant-first (unconfirmed with a firefighter -- see README open question) -- the child can self-evacuate with verbal guidance; the grandmother cannot move without physical assistance, so she needs you first. Leaving either behind to search further is worst.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "tt6gm2a0463x9wmnx7rn6gugc",
+      "roomLabel": "Hallway",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5LSByZUGBkU",
+      "sweepId": "rt93if08sthfemsw6wwfi6b4d",
+      "quizCategory": "hallway",
+      "scenario": "This corridor connects four rooms and is the only path to the stairwell from this side of the floor.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Keep this hallway clear and ventilated before focusing on side rooms."
+        },
+        {
+          "rank": "second_best",
+          "text": "Search a side room first, then return to the hallway."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Treat it as equal priority to any single room."
+        },
+        {
+          "rank": "worst",
+          "text": "Let smoke bank here while fully clearing one room first."
+        }
+      ],
+      "rationale": "A blocked single-path corridor traps every room behind it; protecting it outranks searching any one adjoining room first.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Staircase",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5LSByZUGBkU",
+      "sweepId": "tidcgemfxq7zcpw0mw0u26eea",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "h26t7ky77ew74yb0pg8qqf5rd",
+      "roomLabel": "Bathroom",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5LSByZUGBkU",
+      "sweepId": "f3g6101efnaczmzd4yzwebppa",
+      "quizCategory": "bathroom",
+      "scenario": "The bathroom door is locked from the inside. You hear coughing.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Force entry immediately -- an audible occupant is an active rescue."
+        },
+        {
+          "rank": "second_best",
+          "text": "Knock and wait for a response before forcing entry."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Look for a key elsewhere in the unit first."
+        },
+        {
+          "rank": "worst",
+          "text": "Move on and note it as 'occupied, locked' for later."
+        }
+      ],
+      "rationale": "Coughing means a live, distressed occupant; moving on without acting is the worst option by far.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Bedroom",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5LSByZUGBkU",
+      "sweepId": "7wdbhdw4pgyxwrhiyzk3iggda",
+      "quizCategory": "bedroom",
+      "scenario": "An unconscious adult is on the floor between the bed and the window, closer to the window.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Remove via the nearest viable exit (the window)."
+        },
+        {
+          "rank": "second_best",
+          "text": "Drag them back out through your entry route."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Wait for a second crew member before moving them."
+        },
+        {
+          "rank": "worst",
+          "text": "Search the rest of the room before moving the victim."
+        }
+      ],
+      "rationale": "Shortest path to safety for an unconscious victim wins; delaying removal to search further is worst.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "3m54yff1z7crxaywd8if9rb0d",
+      "roomLabel": "Staircase",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5LSByZUGBkU",
+      "sweepId": "ux560q81cxuf9538crbg0fbgd",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "2qdmc5i9byxi79ry1pxdkqzea",
+      "roomLabel": "Kitchen",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5t632etbD5v",
+      "sweepId": "ex3t1b0s4hhyd60qsk5kx4fcb",
+      "quizCategory": "kitchen",
+      "scenario": "A pot on the stove has caught fire. There's a fire extinguisher on the wall and a bag of flour on the counter.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Smother it with a lid or use the extinguisher."
+        },
+        {
+          "rank": "second_best",
+          "text": "Use the extinguisher from across the room without closing in."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Try to carry the pot to the sink."
+        },
+        {
+          "rank": "worst",
+          "text": "Throw water on it."
+        }
+      ],
+      "rationale": "Smothering/extinguishing in place is safest; moving a burning pot risks spreading fire or burns; water on a grease fire causes violent flare-up and is the clearly worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "19ab05tns5h6y4qm42esqqpea",
+      "roomLabel": "Staircase",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5t632etbD5v",
+      "sweepId": "gdqd0ehxywpwsyfmzc1cycn4a",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "a5f9age4zzxewres6iqux2emc",
+      "roomLabel": "Bathroom",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "5t632etbD5v",
+      "sweepId": "ue73hi70qbns38sruqiapssgb",
+      "quizCategory": "bathroom",
+      "scenario": "The bathroom door is locked from the inside. You hear coughing.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Force entry immediately -- an audible occupant is an active rescue."
+        },
+        {
+          "rank": "second_best",
+          "text": "Knock and wait for a response before forcing entry."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Look for a key elsewhere in the unit first."
+        },
+        {
+          "rank": "worst",
+          "text": "Move on and note it as 'occupied, locked' for later."
+        }
+      ],
+      "rationale": "Coughing means a live, distressed occupant; moving on without acting is the worst option by far.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "ediidma5zg15dufx3n0qyq21a",
+      "roomLabel": "Staircase",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "DzDwPd5j7gR",
+      "sweepId": "qa4322467eeb6121y64gedbeb",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "m8npxsuk79xy21dd09x9wtped",
+      "roomLabel": "Bedroom",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "DzDwPd5j7gR",
+      "sweepId": "xba4ebr6cbhi9nyrngcw4f72a",
+      "quizCategory": "bedroom",
+      "scenario": "The bedroom door is hot to the touch. You hear no response to your verbal announcement.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Check for flashover signs (smoke color, pressure) before any entry."
+        },
+        {
+          "rank": "second_best",
+          "text": "Open the door slowly while staying low and ready to retreat."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Force the door open quickly to search faster."
+        },
+        {
+          "rank": "worst",
+          "text": "Break a window from inside the hot room first."
+        }
+      ],
+      "rationale": "A hot door with no response is a classic flashover warning; forcing entry fast is the clearly worst move since sudden oxygen can feed a ready-to-ignite room.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "wbpb7dkfuwnikd1kq2a9hz70a",
+      "roomLabel": "Bathroom",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "DzDwPd5j7gR",
+      "sweepId": "yd61ua23xs4ic8a45x3e4p46b",
+      "quizCategory": "bathroom",
+      "scenario": "The bathroom is empty but the shower is running and the mirror is fogged.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Shut off the water and widen the search to nearby rooms."
+        },
+        {
+          "rank": "second_best",
+          "text": "Shut off the water and mark the room cleared."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Leave the water running and move on."
+        },
+        {
+          "rank": "worst",
+          "text": "Mark the whole unit cleared since this room is empty."
+        }
+      ],
+      "rationale": "A running, fogged shower means someone was here minutes ago -- widen the search rather than treating the unit as clear.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "b4qtykzcazp4iumkamm7y7h2b",
+      "roomLabel": "Kitchen",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "DzDwPd5j7gR",
+      "sweepId": "9ntmtbtpf7t06tm143rnq7m4c",
+      "quizCategory": "kitchen",
+      "scenario": "A pot on the stove has caught fire. There's a fire extinguisher on the wall and a bag of flour on the counter.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Smother it with a lid or use the extinguisher."
+        },
+        {
+          "rank": "second_best",
+          "text": "Use the extinguisher from across the room without closing in."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Try to carry the pot to the sink."
+        },
+        {
+          "rank": "worst",
+          "text": "Throw water on it."
+        }
+      ],
+      "rationale": "Smothering/extinguishing in place is safest; moving a burning pot risks spreading fire or burns; water on a grease fire causes violent flare-up and is the clearly worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "n81qfe51azs8iexnbqwspye6c",
+      "roomLabel": "Kitchen",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "QC6ELeM7EtZ",
+      "sweepId": "r3qkm1het1kgm4kxn7axseztd",
+      "quizCategory": "kitchen",
+      "scenario": "The kitchen is clear of fire, but smoke-stained dishes suggest someone was cooking recently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Continue searching the unit -- a recently-occupied kitchen means someone may still be nearby."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and search the kitchen again on the way out."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Mark the kitchen cleared and move to the next room."
+        },
+        {
+          "rank": "worst",
+          "text": "Mark the entire unit cleared based on this room alone."
+        }
+      ],
+      "rationale": "Evidence of recent occupancy raises the odds of a victim elsewhere; treating one clear room as proof the whole unit is clear is the most dangerous assumption.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "kuc0fpmsgqxff63egrxrycfud",
+      "roomLabel": "Hallway",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "QC6ELeM7EtZ",
+      "sweepId": "fg80ux540s7isw04nnfkw2mia",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}

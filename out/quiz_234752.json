@@ -1,0 +1,365 @@
+{
+  "propertyId": 234752,
+  "quizItems": [
+    {
+      "roomId": "xy2x8mpaaqknp7q2c3nnbw1ma",
+      "roomLabel": "Office",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "atnem42qka010im4gbb787h7c",
+      "quizCategory": "office",
+      "scenario": "Several desks have monitors still on and chairs pulled out, but the room is empty.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; check adjoining rooms before clearing the area."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it, then clear this room and continue the pattern search."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Clear the room without comment."
+        },
+        {
+          "rank": "worst",
+          "text": "Assume everyone already evacuated based on the empty room."
+        }
+      ],
+      "rationale": "Powered equipment and disturbed furniture suggest occupants left in a hurry and may be nearby; assuming full evacuation from one empty room is the worst read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "613htqkzf66zz7hf7n8kzszed",
+      "roomLabel": "Open Floor",
+      "roomLabelSource": "real-matterport-room-label",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "ca2n6qsaxcw29u2xg5g2ad75d",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "kzm8rk5braw",
+      "roomLabel": "Lobby",
+      "roomLabelSource": "real-matterport-room-label",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "g2y04ggfzm1ug3nfrn95rw17a",
+      "quizCategory": "lobby",
+      "scenario": "A receptionist's desk has a phone off the hook and a half-finished drink.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; the receptionist may be deeper in the building."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and continue the planned search pattern."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Assume the receptionist already left through the front door."
+        },
+        {
+          "rank": "worst",
+          "text": "Disregard the desk entirely as irrelevant."
+        }
+      ],
+      "rationale": "Signs of a hastily-abandoned post suggest the occupant went further in rather than out; assuming they safely left is the riskiest read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "xg1jcqwrcas",
+      "roomLabel": "Conference Room",
+      "roomLabelSource": "real-matterport-room-label",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "ii9p25gqx14q7mdxqkkkahwxa",
+      "quizCategory": "office",
+      "scenario": "Several desks have monitors still on and chairs pulled out, but the room is empty.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat as recently occupied; check adjoining rooms before clearing the area."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it, then clear this room and continue the pattern search."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Clear the room without comment."
+        },
+        {
+          "rank": "worst",
+          "text": "Assume everyone already evacuated based on the empty room."
+        }
+      ],
+      "rationale": "Powered equipment and disturbed furniture suggest occupants left in a hurry and may be nearby; assuming full evacuation from one empty room is the worst read.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "hvhx5b2w2yh",
+      "roomLabel": "Unlabeled room",
+      "roomLabelSource": "real-matterport-unlabeled",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "4tqwxk3w2z43q8pg3ag4dczyb",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Other",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "buiekfi4y2dpqn4rggr9cke9b",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "wrn4wa8q9wk",
+      "roomLabel": "Conference Room",
+      "roomLabelSource": "real-matterport-room-label",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "wuiy67c0gneu7qmzami9ubikb",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "3m54yff1z7crxaywd8if9rb0d",
+      "roomLabel": "Other",
+      "roomLabelSource": "real-matterport-tags",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "0kwyisrsfq95wbm4n0ppzcdsc",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "szai7o6927v",
+      "roomLabel": "Unlabeled room",
+      "roomLabelSource": "real-matterport-unlabeled",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "n898fykkahsmz61csicffcbda",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "dq4p8gbw0ri",
+      "roomLabel": "Unlabeled room",
+      "roomLabelSource": "real-matterport-unlabeled",
+      "matterportModelId": "bjazontdoDt",
+      "sweepId": "p92qw23tbiie83iwx5ftym3ad",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "hfch0hx7pp5",
+      "roomLabel": "Open Floor",
+      "roomLabelSource": "real-matterport-room-label",
+      "matterportModelId": "iRq8DVUNUEQ",
+      "sweepId": "atut1wr2zunyhkdq7f6hbh35a",
+      "quizCategory": "office",
+      "scenario": "A server rack in the corner is sparking intermittently.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "De-energize the circuit, then flag as an electrical hazard."
+        },
+        {
+          "rank": "second_best",
+          "text": "Flag the hazard and avoid the area without de-energizing."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Apply water-based suppression directly to the sparking rack."
+        },
+        {
+          "rank": "worst",
+          "text": "Ignore it and continue the primary search through that corner."
+        }
+      ],
+      "rationale": "Cutting power is the correct first step for an electrical fire; water on a live circuit is the clearly worst option (electrocution risk).",
+      "scenarioSource": "deterministic-template-bank"
+    },
+    {
+      "roomId": "hgb4vw7w3iw",
+      "roomLabel": "Unlabeled room",
+      "roomLabelSource": "real-matterport-unlabeled",
+      "matterportModelId": "iRq8DVUNUEQ",
+      "sweepId": "5tgduhstm3auig1ayppd7gwna",
+      "quizCategory": "generic",
+      "scenario": "The room is clear of visible fire but has moderate smoke and reduced visibility.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Complete a hands-on primary search before moving to the next room."
+        },
+        {
+          "rank": "second_best",
+          "text": "Do a quick visual scan from the doorway, then move on."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Glance in briefly and mark it cleared."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the room entirely based on the doorway view."
+        }
+      ],
+      "rationale": "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option.",
+      "scenarioSource": "deterministic-template-bank"
+    }
+  ]
+}
