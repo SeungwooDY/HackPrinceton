@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import MatterportViewer from './MatterportViewer.jsx';
+import { installExporter } from './exportSweepGraph.js';
+import { installExitMarker } from './exitMarker.js';
 import './styles.css';
+
+// Exposes window.exportSweepGraph() — run it in the console after a model loads
+// to download the SweepGraph JSON for the planner. installExitMarker() adds an
+// on-screen panel to mark door/window sweeps and download the graph with exits[].
+installExporter();
+installExitMarker();
 
 const DEFAULT_MODEL = '85RkQcGH3oE';
 const MODEL_ID = /^[a-zA-Z0-9]{11}$/;

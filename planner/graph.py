@@ -22,16 +22,39 @@ from cost import distance, leg_cost
 Adjacency = dict[str, list[tuple[str, float]]]
 
 
-def build_graph(graph: SweepGraph, blocked: Optional[Iterable[str]] = None) -> Adjacency:
+def build_graph(
+    graph: SweepGraph,
+    blocked: Optional[Iterable[str]] = None,
+    *,
+    max_edge_meters: Optional[float] = None,
+    same_floor: bool = False,
+) -> Adjacency:
+    """Build the weighted adjacency map.
+
+    Matterport `neighbors` are SIGHTLINES, not guaranteed-walkable links: on real
+    scans they include sweeps visible across open space (>10 m) and cross-floor
+    mezzanine links. Routing over raw edges sends people through walls / across
+    gaps. For real exports, filter them out:
+      - `max_edge_meters`: drop any neighbor edge longer than this (sightlines).
+      - `same_floor`: drop edges between different floors (stairs need explicit
+        handling; single-floor drills should set this True).
+    Both default off so the hand-made mock (clean 2 m edges) is untouched.
+    """
     blocked_set = set(blocked or ())
     pos = {s.id: s.position for s in graph.sweeps if s.id not in blocked_set}
+    floor = {s.id: s.floor for s in graph.sweeps}
     adj: Adjacency = {sid: [] for sid in pos}
 
     def add_edge(a: str, b: str) -> None:
         # skip if either endpoint is blocked/unknown, or edge already present
         if a not in pos or b not in pos:
             return
-        w = leg_cost(distance(pos[a], pos[b]), False)
+        if same_floor and floor.get(a) != floor.get(b):
+            return
+        d = distance(pos[a], pos[b])
+        if max_edge_meters is not None and d > max_edge_meters:
+            return
+        w = leg_cost(d, False)
         if not any(n == b for n, _ in adj[a]):
             adj[a].append((b, w))
 
