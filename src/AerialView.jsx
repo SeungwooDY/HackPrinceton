@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { readAerialJson } from './aerialApi.js';
+import AerialHotspots from './AerialHotspots.jsx';
 
 const WIDTHS = [200, 400, 600, 1000, 1600];
 
-export default function AerialView({ modelId, onBackToInterior }) {
+export default function AerialView({ modelId, onBackToInterior, onReady }) {
   const [widthIndex, setWidthIndex] = useState(0);
   const [retry, setRetry] = useState(0);
   const [site, setSite] = useState(null);
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
+  const imageUrl = useRef(null);
+  const readyCallback = useRef(onReady);
+  readyCallback.current = onReady;
+  useEffect(() => () => { if (imageUrl.current) URL.revokeObjectURL(imageUrl.current); }, []);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const width = WIDTHS[widthIndex];
@@ -17,7 +22,6 @@ export default function AerialView({ modelId, onBackToInterior }) {
     let objectUrl;
     setLoading(true);
     setError('');
-    setImage('');
     async function load() {
       try {
         const siteResponse = await fetch(`/api/aerial/site?model=${encodeURIComponent(modelId)}`, { signal: controller.signal });
@@ -35,12 +39,21 @@ export default function AerialView({ modelId, onBackToInterior }) {
         const blob = await response.blob();
         if (controller.signal.aborted) return;
         objectUrl = URL.createObjectURL(blob);
-        setImage(objectUrl);
+        const decoded = new Image();
+        decoded.src = objectUrl;
+        await decoded.decode();
+        if (controller.signal.aborted) return;
+        if (imageUrl.current) URL.revokeObjectURL(imageUrl.current);
+        imageUrl.current = objectUrl;
+        setImage({ url: objectUrl, width });
+        objectUrl = null;
         setLoading(false);
+        readyCallback.current?.();
       } catch (failure) {
         if (controller.signal.aborted) return;
         setError(failure.message || 'Unable to load aerial imagery.');
         setLoading(false);
+        readyCallback.current?.();
       }
     }
     load();
@@ -60,9 +73,9 @@ export default function AerialView({ modelId, onBackToInterior }) {
       </div>
     </div>
     <div className="aerial-image-area">
-      {loading && <p className="aerial-message" role="status">Loading wider aerial imagery…</p>}
+      {loading && <p className="aerial-message" role="status">{image ? 'Updating aerial imagery…' : 'Loading aerial imagery…'}</p>}
       {error && <div className="aerial-message" role="alert"><p>{error}</p><button onClick={() => setRetry(value => value + 1)}>Retry aerial view</button></div>}
-      {image && <div className="aerial-image-frame"><img src={image} alt={`North-up aerial imagery around ${site?.address || 'the building'}, ${width} meters across`} onError={() => { setImage(''); setError('The aerial image could not be displayed. Please retry.'); }}/><span className="aerial-center" aria-hidden="true"/><span className="aerial-north" aria-label="North is up">N ↑</span></div>}
+      {image && <div className="aerial-image-frame"><img src={image.url} alt={`North-up aerial imagery around ${site?.address || 'the building'}, ${image.width} meters across`} onError={() => { setImage(null); setError('The aerial image could not be displayed. Please retry.'); }}/><AerialHotspots modelId={modelId} width={image.width} disabled={loading}/><span className="aerial-center" aria-hidden="true"/><span className="aerial-north" aria-label="North is up">N ↑</span></div>}
       <button type="button" className="aerial-interior-control" onClick={onBackToInterior} aria-label="Return to interior walkthrough" title="Return to interior walkthrough">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="13" cy="4" r="2"/><path d="m7 21 3-7 4 3v4M10 14l2-7 3 4 4 1M12 7 8 9l-2 4"/></svg>
         <span>Interior view</span>

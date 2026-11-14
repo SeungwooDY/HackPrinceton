@@ -15,6 +15,8 @@ export default function MatterportViewer({ modelId, importedFile }) {
   const [overlayTarget, setOverlayTarget] = useState(null);
   const [view, setView] = useState('interior');
   const [aerialOpened, setAerialOpened] = useState(false);
+  const [aerialReady, setAerialReady] = useState(false);
+  const aerialVisible = view === 'aerial' && aerialReady;
   const nativeOverview = useRef(false);
   const restoringInterior = useRef(false);
   const [viewError, setViewError] = useState('');
@@ -40,7 +42,7 @@ export default function MatterportViewer({ modelId, importedFile }) {
 
   async function showInterior() {
     setViewError('');
-    // Reveal the iframe before asking its renderer to finish a mode transition.
+    // Keep the iframe rendering underneath the aerial layer during restoration.
     setView('interior');
     if (nativeOverview.current && connectedSdk) {
       restoringInterior.current = true;
@@ -188,9 +190,10 @@ export default function MatterportViewer({ modelId, importedFile }) {
       <div className="viewer-stage">
         {viewError && <p className="error" role="alert">{viewError}</p>}
         <div className="viewer-viewport">
-        <iframe id="interior-view" hidden={view !== 'interior'} ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
+        <iframe id="interior-view" className={`viewer-layer ${aerialVisible ? 'is-inactive' : 'is-active'}`} inert={aerialVisible} aria-hidden={aerialVisible} ref={frame} title={`Matterport model ${modelId}`} allow="fullscreen; xr-spatial-tracking" allowFullScreen/>
         <div hidden={view !== 'interior'} className="sweep-question-layer" ref={setOverlayTarget}/>
-        {aerialOpened && <div id="aerial-view" className="aerial-container" hidden={view !== 'aerial'}><AerialView modelId={modelId} onBackToInterior={showInterior}/></div>}
+        {(connectedSdk || aerialOpened) && <div id="aerial-view" className={`aerial-container viewer-layer ${aerialVisible ? 'is-active' : 'is-inactive'}`} inert={!aerialVisible} aria-hidden={!aerialVisible}><AerialView modelId={modelId} onReady={() => setAerialReady(true)} onBackToInterior={showInterior}/></div>}
+        {view === 'aerial' && !aerialReady && <div className="view-transition-status" role="status">Preparing aerial view… <button onClick={showInterior}>Cancel</button></div>}
         </div>
       </div>
     </section>
