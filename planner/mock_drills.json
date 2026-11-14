@@ -1,0 +1,26 @@
+[
+  {
+    "_note": "Drill A — normal. Start at the foyer; two searches + one rescue. Expected best order (meters): [t1 kitchen, t2 bed-1, t3 rescue bed-2] = start->kitchen 2, kitchen->bed-1 10, bed-1->bed-2 4, carry->win-bed2 0 = 16 m. Any order visiting bed-1 before kitchen is longer.",
+    "drillId": "mock-A",
+    "modelId": "MOCK-2BR",
+    "unitId": "unit-mock",
+    "start": { "sweepId": "s01" },
+    "scenario": { "timeOfDay": "night", "blockedSweeps": [], "blockedExits": [] },
+    "tasks": [
+      { "id": "t1", "type": "search", "roomId": "kitchen-1", "prompt": "Search the kitchen" },
+      { "id": "t2", "type": "search", "roomId": "bed-1",     "prompt": "Search bedroom 1" },
+      { "id": "t3", "type": "rescue", "roomId": "bed-2",     "prompt": "Rescue the victim in bedroom 2" }
+    ]
+  },
+  {
+    "_note": "Drill B — hallway blocked. Trainee starts in the back (s11, inside bed-2) and hall sweep s03 is on fire. Blocking s03 splits the unit: front {s01 door, s05 kitchen, s06 living, s07 bath} is cut off from back {s04, s08/s09 bed-1, s10/s11/s12 bed-2}. From the back the front door is unreachable, so the only usable exit for the rescue is win-bed2. Expected: feasible, rescue carry leg ends at win-bed2.",
+    "drillId": "mock-B",
+    "modelId": "MOCK-2BR",
+    "unitId": "unit-mock",
+    "start": { "sweepId": "s11" },
+    "scenario": { "timeOfDay": "night", "blockedSweeps": ["s03"], "blockedExits": [] },
+    "tasks": [
+      { "id": "t1", "type": "rescue", "roomId": "bed-2", "prompt": "Rescue the victim in bedroom 2" }
+    ]
+  }
+]

@@ -22,7 +22,10 @@ import json
 import os
 import random
 
-from generate_floor_tasks import load_env, real_location_pool
+# load_env/real_location_pool are imported lazily inside build_quiz()/main() so
+# this module's SCENARIO_BANK + pick_scenario can be imported on their own (e.g.
+# by serve.py for live scenario re-derivation) without pulling in the CoStar/
+# Matterport dependency chain.
 
 OUT = os.path.join(os.path.dirname(__file__), "out")
 SCENARIO_SOURCE = "deterministic-template-bank"
@@ -243,6 +246,48 @@ SCENARIO_BANK = {
                  "Glance in briefly and mark it cleared.",
                  "Skip the room entirely based on the doorway view."],
                 "Reduced visibility still needs a hands-on primary search; skipping a room from a doorway glance is the worst option."),
+        _ranked("You reach a closed interior door and haven't checked what's behind it.",
+                "Rank these actions best to worst.",
+                ["Feel the door and frame for heat, then open it slowly and under control.",
+                 "Open the door slowly, but without checking it for heat first.",
+                 "Fling the door fully open and step straight in.",
+                 "Skip the room because the door is closed."],
+                "A hot door can mean fire behind it; checking for heat and controlling the opening guards against a flashover/backdraft at the doorway. Skipping a closed room leaves a possible victim unsearched."),
+        _ranked("During the search you find an unconscious occupant on the floor.",
+                "Rank these actions best to worst.",
+                ["Begin removing them toward the nearest safe exit and call it in.",
+                 "Call it in and hold for a second rescuer before moving them.",
+                 "Finish searching the rest of the room first, then come back for them.",
+                 "Continue to the next room and plan to retrieve them on the way out."],
+                "A located, non-ambulatory victim is the priority; every delay costs survivable time. Finishing the room or deferring the grab is progressively worse."),
+        _ranked("Your SCBA low-air alarm activates while you are deep in the structure.",
+                "Rank these actions best to worst.",
+                ["Announce it and begin exiting along your known path now.",
+                 "Finish the room you are in, then exit.",
+                 "Push to one more room before heading out.",
+                 "Silence the alarm and keep searching."],
+                "Low-air is a hard turnaround trigger and your egress consumes air too. Pressing on, or silencing the alarm, risks running out before you reach safety."),
+        _ranked("Heavy smoke has dropped to the floor and you have lost your orientation.",
+                "Rank these actions best to worst.",
+                ["Stop, control your breathing, and follow a wall or your hoseline back out.",
+                 "Retrace your steps from memory without a fixed reference.",
+                 "Keep pushing forward hoping to reach an exit.",
+                 "Remove your mask to see better."],
+                "A wall or hoseline is a reliable path out; wandering by memory is unreliable, and demasking in IDLH smoke is how searchers become victims."),
+        _ranked("The room is large and cluttered, with furniture and piles blocking parts of the floor.",
+                "Rank these actions best to worst.",
+                ["Do a systematic hands-on sweep, checking under and behind obstacles.",
+                 "Sweep the open floor but skip the blocked areas.",
+                 "Scan the room with your light from the center and move on.",
+                 "Mark it searched from the doorway."],
+                "Victims collapse behind and under things; clutter hides them. The less contact you make, the more likely you miss exactly where people are found."),
+        _ranked("The floor feels spongy and warm underfoot, and smoke is pushing up through the baseboards.",
+                "Rank these actions best to worst.",
+                ["Stop advancing, sound the floor ahead, and report possible fire below.",
+                 "Move quickly across to finish the room before it worsens.",
+                 "Continue the search at your normal pace.",
+                 "Ignore it; the floor has held so far."],
+                "Spongy, warm floors signal fire beneath and risk collapse; sounding the floor and reporting protects you and the crew. Advancing normally, or ignoring it, invites a fall-through."),
     ],
 }
 
@@ -267,6 +312,37 @@ def pick_scenario(room_id, room_label):
     return category, scenario
 
 
+def assign_distinct(rooms):
+    """Assign scenarios to a set of rooms with NO repeats within a category.
+
+    rooms: iterable of (room_id, room_label). Returns {room_id: (category, scenario)}.
+    Deterministic: each room keeps its own seeded preference (same as pick_scenario);
+    collisions bump to the next unused scenario, with rooms resolved in sorted-id
+    order so the result is stable. If a category has more rooms than unique
+    scenarios, the pool resets once exhausted (repeats then unavoidable).
+    """
+    by_category = {}
+    for room_id, label in rooms:
+        by_category.setdefault(category_for_label(label), []).append(room_id)
+
+    result = {}
+    for category, ids in by_category.items():
+        bank = SCENARIO_BANK.get(category) or SCENARIO_BANK["generic"]
+        used = set()
+        for room_id in sorted(ids):
+            if len(used) >= len(bank):
+                used = set()  # pool exhausted: allow reuse from a clean slate
+            start = random.Random(room_id).randrange(len(bank))
+            idx = next(
+                ((start + step) % len(bank) for step in range(len(bank))
+                 if (start + step) % len(bank) not in used),
+                start,
+            )
+            used.add(idx)
+            result[room_id] = (category, bank[idx])
+    return result
+
+
 def highest_priority_task(tasks):
     """Deterministic ranking over an existing floor's generated tasks -- no LLM judging."""
     if not tasks:
@@ -275,6 +351,7 @@ def highest_priority_task(tasks):
 
 
 def build_quiz(property_id, mp_key, mp_secret):
+    from generate_floor_tasks import real_location_pool
     pool = real_location_pool(property_id, mp_key, mp_secret)
     items = []
     for room_id, meta in pool.items():
@@ -296,6 +373,7 @@ def build_quiz(property_id, mp_key, mp_secret):
 
 
 def main():
+    from generate_floor_tasks import load_env
     ap = argparse.ArgumentParser()
     ap.add_argument("--property-id", type=int, required=True)
     args = ap.parse_args()
