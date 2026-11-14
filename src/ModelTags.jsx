@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { loadTags, saveTags, surfacePosition, normalizeQuiz, gradeTagAnswer } from './tagStorage.js';
 import { createTagWidget } from './tagWidget.js';
+import TaskImportPreview from './TaskImportPreview.jsx';
+import { resolveTask } from './taskImport.js';
+import SweepQuestions from './SweepQuestions.jsx';
+import { questionsAtSweep, sweepIds } from './sweepQuestions.js';
 
-export default function ModelTags({ sdk, modelId }) {
+export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, overlayTarget }) {
   const [tags, setTags] = useState([]);
   const [label, setLabel] = useState('Training point');
   const [description, setDescription] = useState('Inspect this location.');
@@ -15,6 +20,10 @@ export default function ModelTags({ sdk, modelId }) {
   const [busy, setBusy] = useState(true);
   const [message, setMessage] = useState('Restoring saved tags…');
   const [error, setError] = useState('');
+  const [sweeps, setSweeps] = useState(new Map());
+  const [currentSweepIds, setCurrentSweepIds] = useState([]);
+  const [taskRequest, setTaskRequest] = useState(null);
+  const activatedDemo = useRef(null);
   const point = useRef(null);
   const runtime = useRef(new Map());
   const saved = useRef([]);
@@ -30,6 +39,9 @@ export default function ModelTags({ sdk, modelId }) {
   }
 
   async function installTag(tag) {
+    // Imported tasks are sweep-triggered React questions, not native tag markers.
+    // Existing saved imports migrate automatically without recreating their pins.
+    if (tag.importedTask) return tag.id;
     const [sdkId] = await sdk.Tag.add({
       label: tag.label, description: tag.description,
       anchorPosition: tag.anchorPosition, stemVector: tag.stemVector,
@@ -74,9 +86,32 @@ export default function ModelTags({ sdk, modelId }) {
   useEffect(() => {
     alive.current = true;
     let pointerSubscription;
+    let sweepSubscription;
+    let currentSweepSubscription;
+    let sweepTimer;
+    const sweepIndex = new Map();
+    function updateSweep(item, removed = false) {
+      if (!item) return;
+      for (const id of [item.id, item.sid, item.uuid].filter(Boolean)) {
+        if (removed || item.enabled === false) sweepIndex.delete(id);
+        else sweepIndex.set(id, item);
+      }
+      clearTimeout(sweepTimer);
+      sweepTimer = setTimeout(() => { if (alive.current) setSweeps(new Map(sweepIndex)); }, 75);
+    }
     async function initialize() {
       try {
         if (!sdk.Tag?.add || !sdk.Pointer?.intersection?.subscribe) throw new Error('Tag editing is unavailable in this SDK.');
+        currentSweepSubscription = sdk.Sweep.current.subscribe(sweep => {
+          if (alive.current) setCurrentSweepIds(sweepIds(sweep));
+        });
+        if (sdk.Sweep?.data?.subscribe) {
+          sweepSubscription = sdk.Sweep.data.subscribe({
+            onAdded: (_index, item) => updateSweep(item),
+            onUpdated: (_index, item) => updateSweep(item),
+            onRemoved: (_index, item) => updateSweep(item, true),
+          });
+        }
         pointerSubscription = sdk.Pointer.intersection.subscribe(hit => {
           if (!alive.current || captureRemaining.current === 0 || hit.object !== sdk.Pointer.Colliders.MODEL) return;
           const position = surfacePosition(hit);
@@ -104,12 +139,68 @@ export default function ModelTags({ sdk, modelId }) {
     return () => {
       alive.current = false;
       clearInterval(captureTimer.current);
+      clearTimeout(sweepTimer);
       pointerSubscription?.cancel?.();
+      sweepSubscription?.cancel?.();
+      currentSweepSubscription?.cancel?.();
       const ids = [...runtime.current.values()];
       runtime.current.clear();
       if (ids.length) sdk.Tag.remove(...ids).catch(() => {});
     };
   }, [sdk, modelId]);
+
+  async function importTasks(tasks) {
+    if (busy) return;
+    setBusy(true); setError('');
+    let added = 0, skipped = 0, failed = 0;
+    let firstAdded;
+    try {
+      for (const task of tasks) {
+        if (!alive.current) return;
+        const resolved = resolveTask(task, modelId, sweeps, new Set(saved.current.map(tag => tag.id)));
+        if (resolved.status !== 'ready') { skipped += 1; continue; }
+        try {
+          const sdkId = await installTag(resolved.tag);
+          if (!alive.current) return;
+          if (!sdkId) { failed += 1; continue; }
+          persist([...saved.current, resolved.tag]);
+          firstAdded ||= resolved.tag;
+          added += 1;
+        } catch { failed += 1; }
+      }
+      if (alive.current) {
+        setMessage(`Created ${added} sweep task(s). ${skipped} skipped; ${failed} failed. Questions open at their assigned sweeps. Floor and suite mapping remain unverified.`);
+        if (failed) setError('Some tags could not be created. Successful tags were saved; retry to import the remaining tasks.');
+        if (firstAdded) await goToTask(firstAdded);
+      }
+    } finally { if (alive.current) setBusy(false); }
+  }
+
+  useEffect(() => {
+    if (!importedFile?.autoActivate || busy || sweeps.size === 0) return;
+    const localTasks = importedFile.tasks.filter(task => task.modelId === modelId);
+    if (!localTasks.length) return;
+    const existing = new Set(saved.current.map(tag => tag.id));
+    const resolved = localTasks.map(task => ({task, result: resolveTask(task, modelId, sweeps, existing)}));
+    const available = resolved.filter(({result}) => result.status === 'ready' || result.status === 'existing');
+    if (available.length === 0) {
+      setMessage('Demo questions are waiting for their assigned sweeps. If they are not in this scan, edit the sweep IDs in src/demo-tasks.json.');
+      return;
+    }
+    if (activatedDemo.current?.file !== importedFile) activatedDemo.current = {file: importedFile, navigated: false};
+    const additions = resolved.filter(({result}) => result.status === 'ready').map(({result}) => result.tag);
+    if (additions.length) persist([...saved.current, ...additions]);
+    setMessage(`${available.length} demo question(s) active.${available.length < localTasks.length ? ' Waiting for the remaining sweep IDs.' : ''}`);
+    const first = saved.current.find(tag => tag.id === available[0].task.id);
+    if (first && !activatedDemo.current.navigated) {activatedDemo.current.navigated = true;goToTask(first);}
+  }, [importedFile, busy, sweeps, modelId]);
+
+  async function goToTask(tag) {
+    try {
+      await sdk.Sweep.moveTo(tag.importedTask.sweepId, {});
+      if (alive.current) { onShowViewer?.(); await openTag(tag); }
+    } catch { if (alive.current) setError('Could not move to this task’s sweep. Check the model and sweep access.'); }
+  }
 
   function choosePosition() {
     clearInterval(captureTimer.current);
@@ -149,6 +240,10 @@ export default function ModelTags({ sdk, modelId }) {
   }
 
   async function openTag(tag) {
+    if (tag.importedTask) {
+      setTaskRequest(previous => ({id: tag.id, sequence: (previous?.sequence || 0)+1}));
+      return;
+    }
     const id = runtime.current.get(tag.id);
     if (!id) { setError('This tag was not restored. Reload the viewer to retry.'); return; }
     try { await sdk.Tag.open(id); } catch { setError('Could not open this tag. Try clicking its marker in the model.'); }
@@ -167,8 +262,31 @@ export default function ModelTags({ sdk, modelId }) {
     finally { if (alive.current) setBusy(false); }
   }
 
-  return <details className="tag-editor" open>
-    <summary>Model tags ({tags.length})</summary>
+  function answerTask(task, selectedIndex) {
+    const current = saved.current.find(item => item.id === task.id);
+    if (!current || !questionsAtSweep([current], modelId, currentSweepIds).length) return;
+    const correct = gradeTagAnswer(current, selectedIndex);
+    if (correct === null) return;
+    persist(saved.current.map(item => item.id === current.id ? {...item, reviewed: correct, quizResult: correct ? 'correct' : 'incorrect'} : item));
+  }
+  function reviewTask(task) {
+    if (!questionsAtSweep([task], modelId, currentSweepIds).length) return;
+    persist(saved.current.map(item => item.id === task.id ? {...item, reviewed: true} : item));
+  }
+  function resetTask(task) {
+    if (!questionsAtSweep([task], modelId, currentSweepIds).length) return;
+    persist(saved.current.map(item => item.id === task.id ? {...item, reviewed: false, quizResult: null} : item));
+  }
+  const demoIds = importedFile?.autoActivate ? new Set(importedFile.tasks.map(task => task.id)) : null;
+  const currentTasks = questionsAtSweep(demoIds ? tags.filter(tag => demoIds.has(tag.id)) : tags, modelId, currentSweepIds);
+
+  return <details className="tag-editor" open={!importedFile?.autoActivate}>
+    <summary>Questions & tags ({tags.length})</summary>
+    {overlayTarget && currentTasks.length > 0 && createPortal(<SweepQuestions key={currentSweepIds.join(':')} tasks={currentTasks} request={taskRequest} onAnswer={answerTask} onReview={reviewTask} onReset={resetTask}/>, overlayTarget)}
+    {tags.some(tag => tag.importedTask) && <p>Imported questions appear automatically at their assigned sweep and disappear when you leave it. Manual tags remain clickable.</p>}
+    {importedFile && !importedFile.autoActivate && <TaskImportPreview key={`${importedFile.fileName}-${modelId}`} importedFile={importedFile} modelId={modelId} sweeps={sweeps} tags={tags} busy={busy || captureSeconds > 0} onCreate={importTasks}/>}
+    <details className="manual-tag-editor" open={!importedFile}>
+    <summary>Add a tag manually</summary>
     <p>Choose a task and enter its content. Click “Choose position”, then point at a wall or floor in the walkthrough until the five-second countdown ends. Click “Add tag” to place it.</p>
     <form className="tag-form" onSubmit={addTag}>
       <div><label htmlFor="tag-label">Label</label><input id="tag-label" value={label} maxLength={100} required onChange={e => setLabel(e.target.value)}/></div>
@@ -183,9 +301,10 @@ export default function ModelTags({ sdk, modelId }) {
       <button disabled={busy || !target || !label.trim()} type="submit">{busy ? 'Please wait…' : 'Add tag'}</button>
     </form>
     <p className="tag-position">{target ? `Captured position: ${['x', 'y', 'z'].map(axis => `${axis} ${target.anchorPosition[axis].toFixed(2)}`).join(', ')}` : 'No position selected.'}</p>
+    </details>
     <p className="tag-message" role="status">{message}</p>
     {error && <p className="field-error" role="alert">{error}</p>}
-    {tags.length > 0 && <ul className="tag-list">{tags.map(tag => <li key={tag.id}><div><strong>{tag.label}</strong><span>{tag.quiz ? tag.quizResult === 'correct' ? 'Quiz complete' : tag.quizResult === 'incorrect' ? 'Quiz: try again' : 'Quiz not answered' : tag.reviewed ? 'Reviewed' : 'Not reviewed'}</span></div><button disabled={busy} onClick={() => openTag(tag)}>Open</button><button disabled={busy} onClick={() => removeTag(tag)}>Remove</button></li>)}</ul>}
+    {tags.length > 0 && <ul className="tag-list">{tags.map(tag => <li key={tag.id}><div><strong>{tag.label}</strong><span>{tag.quiz ? tag.quizResult === 'correct' ? 'Quiz complete' : tag.quizResult === 'incorrect' ? 'Quiz: try again' : 'Quiz not answered' : tag.reviewed ? 'Reviewed' : 'Not reviewed'}</span>{tag.importedTask && <span>Imported task · floor/suite mapping unverified</span>}</div>{tag.importedTask && <button disabled={busy} onClick={() => goToTask(tag)}>Go to task</button>}{!tag.importedTask && <button disabled={busy} onClick={() => openTag(tag)}>Open</button>}<button disabled={busy} onClick={() => removeTag(tag)}>Remove</button></li>)}</ul>}
     <p className="tag-storage-note">Tags are saved in this browser for this model. They do not change the original Matterport model.</p>
   </details>;
 }
