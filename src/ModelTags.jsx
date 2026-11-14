@@ -39,17 +39,20 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
   }
 
   async function installTag(tag) {
-    // Imported tasks are sweep-triggered React questions, not native tag markers.
-    // Existing saved imports migrate automatically without recreating their pins.
-    if (tag.importedTask) return tag.id;
     const [sdkId] = await sdk.Tag.add({
       label: tag.label, description: tag.description,
       anchorPosition: tag.anchorPosition, stemVector: tag.stemVector,
-      color: { r: 0.7, g: 0.55, b: 0.35 },
+      color: tag.importedTask ? { r: 0.25, g: 0.45, b: 0.8 } : { r: 0.7, g: 0.55, b: 0.35 },
     });
     if (!sdkId) throw new Error('No tag ID returned.');
     if (!alive.current) { await sdk.Tag.remove(sdkId); return null; }
     runtime.current.set(tag.id, sdkId);
+    // Imported/quiz checkpoints get a visible native marker (tag.label is the
+    // order-blind "Checkpoint N" wayfinding name) purely so a trainee can see
+    // where they are from a distance. The quiz itself still only triggers via
+    // the proximity-based SweepQuestions overlay below -- no interactive
+    // widget is attached here, so the marker itself isn't a second way to answer.
+    if (tag.importedTask) return sdkId;
     // The native tag still works if this SDK does not support custom attachments.
     try {
       const widget = createTagWidget(tag);
@@ -200,6 +203,21 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     const first = saved.current.find(tag => tag.id === available[0].task.id);
     if (first && !activatedDemo.current.navigated) {activatedDemo.current.navigated = true;goToTask(first);}
   }, [importedFile, busy, sweeps, modelId]);
+
+  // Remove a checkpoint's visible 3D marker once it's been answered/reviewed --
+  // manual (non-imported) tags are untouched, they're meant to persist.
+  useEffect(() => {
+    for (const tag of tags) {
+      if (!tag.importedTask) continue;
+      const completed = tag.quiz ? tag.quizResult != null : tag.reviewed;
+      if (!completed) continue;
+      const sdkId = runtime.current.get(tag.id);
+      if (sdkId) {
+        runtime.current.delete(tag.id);
+        sdk.Tag.remove(sdkId).catch(() => {});
+      }
+    }
+  }, [tags, sdk]);
 
   // Drill complete when every imported quiz question has been answered.
   useEffect(() => {

@@ -14,6 +14,10 @@ ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "out"
 
 
+# Room labels too generic to show in a "Checkpoint N -- <room>" wayfinding label.
+_GENERIC_CHECKPOINT_LABELS = {"other", "unfurnished", "unlabeled room"}
+
+
 def quiz_items_for_model(model_id):
     """All quizItems across out/quiz_*.json whose matterportModelId matches.
 
@@ -22,7 +26,14 @@ def quiz_items_for_model(model_id):
     assigned with NO repeats across this model's rooms (assign_distinct), so every
     question in a drill is different (until a category's pool is exhausted). Edits
     to the bank show up on reload with no regeneration. Falls back to the saved
-    text if the generator module can't be imported."""
+    text if the generator module can't be imported.
+
+    Every item also gets a stable "id" (q1, q2, ...) and a "checkpointLabel"
+    ("Checkpoint 3", or "Checkpoint 3 -- Bedroom" when the room has a real
+    label). This numbering is order-BLIND on purpose: it's a stable wayfinding
+    name for a native 3D marker, not a hint about which checkpoint the solver
+    says to visit first -- that comparison only happens after the drill, in
+    the debrief."""
     try:
         from quiz_scenarios import assign_distinct
     except Exception:
@@ -60,6 +71,12 @@ def quiz_items_for_model(model_id):
                 })
         except Exception:
             pass  # keep the saved text
+
+    for i, q in enumerate(items):
+        q["id"] = f"q{i + 1}"
+        room_label = (q.get("roomLabel") or "").strip()
+        has_real_label = bool(room_label) and room_label.lower() not in _GENERIC_CHECKPOINT_LABELS
+        q["checkpointLabel"] = f"Checkpoint {i + 1} -- {room_label}" if has_real_label else f"Checkpoint {i + 1}"
     return items
 
 

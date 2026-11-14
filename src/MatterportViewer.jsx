@@ -229,7 +229,7 @@ export default function MatterportViewer({ modelId, importedFile }) {
       {error && <p className="error" role="alert">{error}</p>}
       {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })} onComplete={handleComplete}/>}
       {phase === 'returning' && <div className="return-prompt" role="status">All tasks complete — return to the entrance to finish the drill.</div>}
-      {phase === 'debrief' && connectedSdk && <DrillDebrief sdk={connectedSdk} modelId={modelId} score={summary?.score} maxScore={summary?.maxScore} trail={debriefTrail.current} plan={plan} onClose={() => setPhase('done')}/>}
+      {phase === 'debrief' && connectedSdk && <DrillDebrief sdk={connectedSdk} modelId={modelId} score={summary?.score} maxScore={summary?.maxScore} trail={debriefTrail.current} plan={plan} checkpoints={importedFile?.tasks} onClose={() => setPhase('done')}/>}
       <div className="viewer-stage">
         {viewError && <p className="error" role="alert">{viewError}</p>}
         <div className="viewer-viewport">
