@@ -5,6 +5,7 @@ import csv
 import json
 import math
 import os
+import ssl
 from functools import lru_cache
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -14,6 +15,21 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parent
 KIT = ROOT / 'costar-hackathon-kit'
 WIDTHS = (200, 400, 600, 1000, 1600)
+
+
+def _ssl_context():
+    """TLS context with a CA bundle. The python.org/pyenv macOS builds ship no
+    system trust store, so a bare urlopen raises CERTIFICATE_VERIFY_FAILED;
+    certifi's bundle fixes it. Fall back to the default context if certifi is
+    absent (e.g. a Linux box with OS certs)."""
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:
+        return ssl.create_default_context()
+
+
+SSL_CONTEXT = _ssl_context()
 
 
 class ImageryError(Exception):
@@ -128,7 +144,7 @@ def get_site_imagery(lat, lon, vexcel_api_key=None, width_meters=600):
     request = Request('https://api.vexcelgroup.com/v2/ortho/extract?' + urlencode(params),
                       headers={'X-API-KEY': key})
     try:
-        with urlopen(request, timeout=30) as response:
+        with urlopen(request, timeout=30, context=SSL_CONTEXT) as response:
             content_type = response.headers.get_content_type()
             if content_type not in ('image/jpeg', 'image/png'):
                 raise ImageryError('Vexcel did not return an aerial image.')

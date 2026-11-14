@@ -12,7 +12,7 @@ import './styles.css';
 installExporter();
 installExitMarker();
 
-const DEFAULT_MODEL = 'PLPZJBUixWt';
+const DEFAULT_MODEL = 'KBqHB8Xq9Vo';
 const MODEL_ID = /^[a-zA-Z0-9]{11}$/;
 const requestedModel = new URLSearchParams(window.location.search).get('model');
 const initialModel = MODEL_ID.test(requestedModel || '') ? requestedModel : DEFAULT_MODEL;
