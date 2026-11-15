@@ -74,6 +74,31 @@ export async function buildSweepGraph(sdk, modelId) {
   };
 }
 
+// Collect roomId -> label from the SDK's Room data. The exporter above leaves
+// room labels as "Unlabeled room" because Sweep.data's roomInfo carries only an
+// id; the human-readable label lives in Room.data (same source the viewer's
+// "Current room" status bar uses). Rooms the model owner never named are
+// skipped, so the map holds only real labels.
+function collectRoomLabels(sdk, timeoutMs = 5000) {
+  return new Promise((resolve) => {
+    if (!sdk.Room?.data?.subscribe) return resolve({});
+    const labels = {};
+    let sub;
+    const done = () => { try { sub?.cancel?.(); } catch {} resolve(labels); };
+    const timer = setTimeout(done, timeoutMs);
+    sub = sdk.Room.data.subscribe({
+      onCollectionUpdated(collection) {
+        for (const room of Object.values(collection || {})) {
+          const id = room?.id ?? room?.sid;
+          const label = (room?.label ?? room?.name ?? "").trim();
+          if (id && label) labels[id] = label;
+        }
+        if (Object.keys(labels).length) { clearTimeout(timer); done(); }
+      },
+    });
+  });
+}
+
 export function downloadJSON(obj, filename) {
   const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -97,5 +122,18 @@ export function installExporter() {
         `${edges} raw neighbor links. exits[] is empty — add doors/windows by hand.`,
     );
     return graph;
+  };
+
+  // window.exportRoomLabels() -> downloads roomlabels_<model>.json, a
+  // { roomId: label } map for quiz_from_sweepgraph.py --labels. Feeds
+  // room-type-matched scenarios (and "Checkpoint N -- <room>" markers).
+  window.exportRoomLabels = async (modelId) => {
+    const sdk = window.mpSdk;
+    if (!sdk) throw new Error("SDK not connected — load a model first.");
+    const labels = await collectRoomLabels(sdk);
+    const id = modelId || (await sdk.Model.getData().catch(() => ({})))?.sid || "unknown-model";
+    downloadJSON(labels, `roomlabels_${id}.json`);
+    console.log(`Exported ${Object.keys(labels).length} room label(s).`, labels);
+    return labels;
   };
 }

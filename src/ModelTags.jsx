@@ -199,7 +199,15 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     const importedIds = new Set(localTasks.map(task => task.id));
     const base = freshDrill ? saved.current.filter(tag => !importedIds.has(tag.id)) : saved.current;
     if (additions.length || freshDrill) persist([...base, ...additions]);
-    setMessage(`${available.length} question(s) active.${available.length < localTasks.length ? ' Waiting for the remaining sweep IDs.' : ''}`);
+    // Place each checkpoint's visible 3D marker. The autoActivate path only
+    // persists the tasks; without this, native markers appear only after a
+    // reload (when initialize() restores + installs them). Guard on
+    // runtime.current so a re-run (sweeps stream in over several ticks) or a
+    // reload that already installed from localStorage doesn't double-add.
+    for (const tag of additions) {
+      if (runtime.current.has(tag.id)) continue;
+      installTag(tag).catch(() => {});
+    }
     const first = saved.current.find(tag => tag.id === available[0].task.id);
     if (first && !activatedDemo.current.navigated) {activatedDemo.current.navigated = true;goToTask(first);}
   }, [importedFile, busy, sweeps, modelId]);

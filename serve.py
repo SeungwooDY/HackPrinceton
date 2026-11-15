@@ -98,7 +98,7 @@ def route_plan_for_model(model_id):
 
     graph = SweepGraph.load(str(graph_path))
     tl = tasklist_from_quiz({"quizItems": quiz_items_for_model(model_id)}, graph)
-    rp = plan(graph, tl, max_edge_meters=6.0, same_floor=True, auto_complete_start=False)
+    rp = plan(graph, tl, max_edge_meters=6.0, same_floor=False, auto_complete_start=False)
     exit_sweep = next((e.sweepId for e in graph.exits if e.id == rp.exitId), None)
     return {
         "drillId": rp.drillId, "feasible": rp.feasible, "order": rp.order,
