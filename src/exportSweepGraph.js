@@ -111,7 +111,7 @@ export function downloadJSON(obj, filename) {
 
 // Attaches window.exportSweepGraph() for console use once a model is loaded.
 export function installExporter() {
-  window.exportSweepGraph = async (modelId) => {
+  const exporter = async (modelId) => {
     const sdk = window.mpSdk;
     if (!sdk) throw new Error("SDK not connected — load a model first.");
     const graph = await buildSweepGraph(sdk, modelId);
@@ -127,7 +127,7 @@ export function installExporter() {
   // window.exportRoomLabels() -> downloads roomlabels_<model>.json, a
   // { roomId: label } map for quiz_from_sweepgraph.py --labels. Feeds
   // room-type-matched scenarios (and "Checkpoint N -- <room>" markers).
-  window.exportRoomLabels = async (modelId) => {
+  const roomExporter = async (modelId) => {
     const sdk = window.mpSdk;
     if (!sdk) throw new Error("SDK not connected — load a model first.");
     const labels = await collectRoomLabels(sdk);
@@ -135,5 +135,11 @@ export function installExporter() {
     downloadJSON(labels, `roomlabels_${id}.json`);
     console.log(`Exported ${Object.keys(labels).length} room label(s).`, labels);
     return labels;
+  };
+  window.exportSweepGraph = exporter;
+  window.exportRoomLabels = roomExporter;
+  return () => {
+    if (window.exportSweepGraph === exporter) delete window.exportSweepGraph;
+    if (window.exportRoomLabels === roomExporter) delete window.exportRoomLabels;
   };
 }

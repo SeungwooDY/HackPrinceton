@@ -118,4 +118,5 @@ export function installExitMarker() {
   }, 500);
 
   render();
+  return () => { clearInterval(poll); unsub?.cancel?.(); panel.remove(); };
 }

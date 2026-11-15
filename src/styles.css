@@ -306,3 +306,39 @@ button:disabled { cursor: default; opacity: .5; }
 .obstacle-controls li { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border: 1px solid #555; border-radius: 4px; }
 .obstacle-controls li button { min-height: 28px; padding: 3px 8px; font-size: 12px; }
 .obstacle-controls small { color: #aaa; }
+
+/* Model selection opens before any tour or SDK initialization. */
+.model-selection { min-height: 100dvh; background: #111; color: #eee; }
+.selection-header { height: 60px; display: flex; align-items: center; padding: 0 28px; border-bottom: 1px solid #333; font-size: 17px; font-weight: 600; }
+.selection-content { width: min(880px, 100%); margin: 0 auto; padding: 48px 28px 56px; }
+.selection-content h1 { margin: 0 0 8px; font-size: 28px; line-height: 1.3; font-weight: 600; }
+.selection-description { margin: 0 0 28px; color: #aaa; font-size: 15px; }
+.selection-models { padding: 0; margin: 0; list-style: none; border: 1px solid #393939; border-radius: 6px; overflow: hidden; }
+.selection-models li { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px; background: #181818; }
+.selection-models li + li { border-top: 1px solid #333; }
+.selection-model-info { min-width: 0; }
+.selection-model-info h2 { margin: 0 0 4px; font-size: 16px; font-weight: 500; }
+.selection-model-info p { margin: 0 0 6px; color: #aaa; font-size: 13px; }
+.selection-model-info code { color: #888; font-size: 12px; }
+.selection-models button { flex-shrink: 0; padding: 8px 14px; background: #242424; border-color: #555; }
+.selection-models button:hover { background: #333; border-color: #999; }
+.selection-models button span { margin-left: 12px; }
+.selection-custom { margin-top: 32px; }
+.selection-custom h2 { margin: 0 0 16px; font-size: 16px; font-weight: 500; }
+.selection-custom form { max-width: none; align-items: flex-end; }
+.selection-custom label { font-size: 13px; }
+.selection-custom input { min-height: 42px; }
+.selection-open { min-height: 42px; flex-shrink: 0; background: #986b42; border-color: #986b42; color: #fff; }
+.selection-open:hover { background: #825735; border-color: #825735; }
+.choose-model-button { margin-left: auto; background: transparent; border-color: #444; font-size: 13px; }
+.viewer-loading { padding: 24px; color: #aaa; }
+@media (max-width: 600px) {
+  .selection-header { padding: 0 20px; }
+  .selection-content { padding: 32px 20px; }
+  .selection-content h1 { font-size: 24px; }
+  .selection-models li { padding: 16px; gap: 12px; align-items: flex-start; }
+  .selection-models button { padding: 7px 10px; font-size: 13px; }
+  .selection-models button span { display: none; }
+  .selection-custom form { flex-direction: column; align-items: stretch; }
+  .selection-custom .model-field { width: 100%; }
+}
