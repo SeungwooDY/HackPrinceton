@@ -1,4 +1,11 @@
-const keyFor = modelId => `matterport-tags:v1:${modelId}`;
+// v2: bumped from v1 to abandon stale tags saved by earlier builds. Imported
+// quiz checkpoints are re-derived from /api/quiz every load, but older builds
+// persisted them (with different ids per quiz regeneration), so a returning
+// browser could restore a big pile of mismatched tags -- which broke the drill
+// in a normal window while a fresh incognito window worked. Bumping the key
+// gives every existing browser a clean slate; only manual tags are meant to
+// persist anyway.
+const keyFor = modelId => `matterport-tags:v2:${modelId}`;
 export const isVector = value => value && ['x', 'y', 'z'].every(axis => Number.isFinite(value[axis]));
 
 export function normalizeQuiz(quiz) {

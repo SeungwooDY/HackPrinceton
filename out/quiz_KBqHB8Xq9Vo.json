@@ -1,0 +1,155 @@
+{
+  "matterportModelId": "KBqHB8Xq9Vo",
+  "quizItems": [
+    {
+      "roomId": "3m54yff1z7crxaywd8if9rb0d",
+      "roomLabel": "Hallway",
+      "roomLabelSource": "sweepgraph-export",
+      "matterportModelId": "KBqHB8Xq9Vo",
+      "sweepId": "h0zzuhgcyfata6md7x3u9ewcb",
+      "quizCategory": "hallway",
+      "scenario": "Smoke is banking down the hallway ceiling but visibility at floor level is still clear.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Stay low and continue moving toward the search objective."
+        },
+        {
+          "rank": "second_best",
+          "text": "Pause briefly to reassess, then continue low."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Retreat fully and wait for conditions to improve."
+        },
+        {
+          "rank": "worst",
+          "text": "Stand upright to move faster through the hallway."
+        }
+      ],
+      "rationale": "Banking smoke with clear floor-level visibility is still passable low; standing upright into the smoke layer is the worst choice.",
+      "scenarioSource": "sweepgraph-derived"
+    },
+    {
+      "roomId": "a5f9age4zzxewres6iqux2emc",
+      "roomLabel": "Landing",
+      "roomLabelSource": "sweepgraph-export",
+      "matterportModelId": "KBqHB8Xq9Vo",
+      "sweepId": "mksqcu0ea8z3bg5z6428u674d",
+      "quizCategory": "hallway",
+      "scenario": "This corridor connects four rooms and is the only path to the stairwell from this side of the floor.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Keep this hallway clear and ventilated before focusing on side rooms."
+        },
+        {
+          "rank": "second_best",
+          "text": "Search a side room first, then return to the hallway."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Treat it as equal priority to any single room."
+        },
+        {
+          "rank": "worst",
+          "text": "Let smoke bank here while fully clearing one room first."
+        }
+      ],
+      "rationale": "A blocked single-path corridor traps every room behind it; protecting it outranks searching any one adjoining room first.",
+      "scenarioSource": "sweepgraph-derived"
+    },
+    {
+      "roomId": "cdz3fkt38kae7tapstpt0eaeb",
+      "roomLabel": "Living Room",
+      "roomLabelSource": "sweepgraph-export",
+      "matterportModelId": "KBqHB8Xq9Vo",
+      "sweepId": "ris1wr881s5zibrganpz7yx5d",
+      "quizCategory": "living",
+      "scenario": "The room is clear, but a baby monitor on the shelf is powered on and transmitting static.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Treat it as evidence of an infant nearby and prioritize nearby bedrooms."
+        },
+        {
+          "rank": "second_best",
+          "text": "Note it and continue the standard search order."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Mark the room cleared and move on."
+        },
+        {
+          "rank": "worst",
+          "text": "Disregard it as an irrelevant object."
+        }
+      ],
+      "rationale": "A powered baby monitor strongly implies a child is present somewhere nearby; disregarding it is the worst read of the evidence.",
+      "scenarioSource": "sweepgraph-derived"
+    },
+    {
+      "roomId": "b4qtykzcazp4iumkamm7y7h2b",
+      "roomLabel": "Closet",
+      "roomLabelSource": "sweepgraph-export",
+      "matterportModelId": "KBqHB8Xq9Vo",
+      "sweepId": "e5fuacf1ki6d824d9htgxzxxc",
+      "quizCategory": "closet",
+      "scenario": "The closet door is slightly ajar and you notice small shoes just inside.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Check inside -- children sometimes hide in closets during a fire."
+        },
+        {
+          "rank": "second_best",
+          "text": "Glance in from the doorway without physically checking."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Note the shoes and move on."
+        },
+        {
+          "rank": "worst",
+          "text": "Skip the closet entirely since it's a small space."
+        }
+      ],
+      "rationale": "Closets are a common hiding spot for frightened children; a quick but thorough check is low-cost and high-value, skipping it entirely is worst.",
+      "scenarioSource": "sweepgraph-derived"
+    },
+    {
+      "roomId": "h26t7ky77ew74yb0pg8qqf5rd",
+      "roomLabel": "Bathroom",
+      "roomLabelSource": "sweepgraph-export",
+      "matterportModelId": "KBqHB8Xq9Vo",
+      "sweepId": "r5ez22z9er00wqfu24h400zmc",
+      "quizCategory": "bathroom",
+      "scenario": "The bathroom door is locked from the inside. You hear coughing.",
+      "question": "Rank these actions best to worst.",
+      "options": [
+        {
+          "rank": "best",
+          "text": "Force entry immediately -- an audible occupant is an active rescue."
+        },
+        {
+          "rank": "second_best",
+          "text": "Knock and wait for a response before forcing entry."
+        },
+        {
+          "rank": "second_worst",
+          "text": "Look for a key elsewhere in the unit first."
+        },
+        {
+          "rank": "worst",
+          "text": "Move on and note it as 'occupied, locked' for later."
+        }
+      ],
+      "rationale": "Coughing means a live, distressed occupant; moving on without acting is the worst option by far.",
+      "scenarioSource": "sweepgraph-derived"
+    }
+  ]
+}
