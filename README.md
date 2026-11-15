@@ -165,3 +165,9 @@ with meter-based extents and attribution enabled. Run backend checks with
 - **Vexcel products:** which are available (ortho, oblique, elevation, footprints).
 - **Field fill rates:** for the hero buildings.
 - **Hydrant data:** whether Houston or LA publishes open hydrant locations.
+
+
+## Vercel deployment
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the Python API routing, required environment
+variables, SDK build, and files that must be committed before redeploying.

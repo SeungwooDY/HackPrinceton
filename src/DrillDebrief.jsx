@@ -1,3 +1,4 @@
+import { readJsonResponse } from './apiResponse.js';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 // Post-drill replay + debrief. Shows the score and lets you replay either the
@@ -53,7 +54,7 @@ export default function DrillDebrief({ sdk, modelId, score, maxScore, trail, pla
     if (planProp) { setPlan(planProp); setNote(noteFor(planProp)); return undefined; }
     let live = true;
     fetch(`/api/plan?model=${encodeURIComponent(modelId)}`)
-      .then(r => r.json())
+      .then(r => readJsonResponse(r, 'Route plan API'))
       .then(p => { if (!live) return; setPlan(p); setNote(noteFor(p)); })
       .catch(() => { if (live) setNote('Could not load the optimal route.'); });
     return () => { live = false; };

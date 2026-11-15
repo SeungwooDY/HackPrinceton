@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+node_modules
+costar-hackathon-kit
+public/bundle
+__pycache__
+dist
+.vercel
+.aws
+.agents
+.codex
+.DS_Store

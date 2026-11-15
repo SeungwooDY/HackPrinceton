@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/backend.py": {
+      "maxDuration": 60,
+      "excludeFiles": "{node_modules/**,public/**,dist/**,costar-hackathon-kit/**,.git/**,.env*,src/**,scripts/**,**/*.test.js,**/test_*.py}"
+    }
+  },
+  "rewrites": [
+    { "source": "/config.json", "destination": "/api/backend?__route=config" },
+    { "source": "/api/quiz", "destination": "/api/backend?__route=quiz" },
+    { "source": "/api/plan", "destination": "/api/backend?__route=plan" },
+    { "source": "/api/aerial/site", "destination": "/api/backend?__route=aerial-site" },
+    { "source": "/api/aerial/image", "destination": "/api/backend?__route=aerial-image" },
+    { "source": "/api/health", "destination": "/api/backend?__route=health" }
+  ]
+}

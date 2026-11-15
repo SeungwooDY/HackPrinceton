@@ -185,7 +185,7 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as e:
                 result = {"feasible": False, "error": str(e)[:300]}
             self.respond(200, "application/json", json.dumps(result).encode())
-        elif path in ("/", "/index.html") or path.startswith("/assets/"):
+        elif path in ("/", "/index.html") or path.startswith("/assets/") or path.startswith("/models/"):
             dist = ROOT / "dist"
             target = (dist / ("index.html" if path in ("/", "/index.html") else path.lstrip("/"))).resolve()
             if target.is_relative_to(dist.resolve()) and target.is_file():

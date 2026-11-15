@@ -80,6 +80,11 @@ def get_property_latlon(property_id):
 
 @lru_cache(maxsize=1)
 def model_sites():
+    prepared = ROOT / 'deployment/sites.json'
+    if not (KIT / 'commercial-properties.csv').exists() and not (KIT / 'residential-listings.csv').exists() and prepared.is_file():
+        data = json.loads(prepared.read_text(encoding='utf-8'))
+        return {model: site for model, site in data.items() if isinstance(site, dict)
+                and valid_coordinates(site.get('latitude'), site.get('longitude'))}
     sites = {}
     path = KIT / 'commercial-properties.csv'
     if path.exists():

@@ -269,7 +269,6 @@ button:disabled { cursor: default; opacity: .5; }
 .aerial-quiz-import:focus-within { outline: 3px solid #ffda67; outline-offset: 3px; }
 .aerial-quiz-import input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-<<<<<<< HEAD
 /* Post-drill debrief + replay */
 .debrief-overlay { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: rgba(17, 15, 13, 0.55); }
 .debrief-card { position: relative; width: min(420px, 92vw); background: #faf8f5; color: #292524; border-top: 4px solid #b47746; border-radius: 8px; padding: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.35); font: 14px/1.5 system-ui, sans-serif; }
@@ -295,7 +294,6 @@ button:disabled { cursor: default; opacity: .5; }
 
 /* "Return to entrance" prompt (drill egress) */
 .return-prompt { position: fixed; left: 50%; top: 16px; transform: translateX(-50%); z-index: 9999; background: #986b42; color: #fffdf8; padding: 12px 20px; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.35); font-weight: 600; max-width: 92vw; text-align: center; }
-=======
 .obstacle-controls { padding: 12px 24px; border-top: 1px solid #444; border-bottom: 1px solid #444; background: #202020; }
 .obstacle-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .obstacle-toolbar label { display: inline-flex; align-items: center; gap: 8px; }
@@ -308,4 +306,3 @@ button:disabled { cursor: default; opacity: .5; }
 .obstacle-controls li { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border: 1px solid #555; border-radius: 4px; }
 .obstacle-controls li button { min-height: 28px; padding: 3px 8px; font-size: 12px; }
 .obstacle-controls small { color: #aaa; }
->>>>>>> feat/obstacles

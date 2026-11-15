@@ -1,3 +1,4 @@
+import { readJsonResponse } from './apiResponse.js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ModelTags from './ModelTags.jsx';
 import DrillDebrief from './DrillDebrief.jsx';
@@ -107,7 +108,7 @@ export default function MatterportViewer({ modelId, importedFile }) {
     if (phase !== 'returning') return undefined;
     let live = true;
     fetch(`/api/plan?model=${encodeURIComponent(modelId)}`)
-      .then(r => r.json())
+      .then(r => readJsonResponse(r, 'Route plan API'))
       .then(p => {
         if (!live) return;
         setPlan(p);
@@ -142,8 +143,7 @@ export default function MatterportViewer({ modelId, importedFile }) {
     async function initialize() {
       try {
         const response = await fetch('/config.json', { cache: 'no-store', signal: controller.signal });
-        const config = await response.json();
-        if (!response.ok) throw new Error(config.error || 'Unable to load SDK configuration.');
+        const config = await readJsonResponse(response, 'Viewer configuration');
         if (!active) return;
         const key = config.matterportSdkKey;
         onLoad = async () => {

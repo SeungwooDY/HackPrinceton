@@ -1,3 +1,4 @@
+import { readJsonResponse } from './apiResponse.js';
 import { parseTaskDocument } from './taskImport.js';
 
 // Rank-based partial credit: picking a better-ranked option scores more.
@@ -15,7 +16,7 @@ export const MAX_POINTS_PER_QUESTION = 3;
 export async function loadQuizFile(modelId) {
   const res = await fetch(`/api/quiz?model=${encodeURIComponent(modelId)}`);
   if (!res.ok) throw new Error(`quiz fetch failed: ${res.status}`);
-  const { quizItems = [] } = await res.json();
+  const { quizItems = [] } = await readJsonResponse(res, 'Quiz API');
 
   const tasks = quizItems.map((q, i) => {
     const opts = (q.options || []).filter(o => o && typeof o.text === 'string');
