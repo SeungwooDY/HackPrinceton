@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ModelTags from './ModelTags.jsx';
 import DrillDebrief from './DrillDebrief.jsx';
 import AerialView from './AerialView.jsx';
+import ObstacleControls from './ObstacleControls.jsx';
 
 export default function MatterportViewer({ modelId, importedFile }) {
   const frame = useRef(null);
@@ -44,6 +45,12 @@ export default function MatterportViewer({ modelId, importedFile }) {
         if (!restoringInterior.current) showAerial();
       } else if (mode === connectedSdk.Mode.Mode.INSIDE) {
         nativeOverview.current = false;
+        // Some Bundle releases leave the startup screen over a running panorama.
+        // Hide it only after the SDK confirms an active interior mode.
+        try {
+          const loading = frame.current?.contentDocument?.querySelector('#loading-gui');
+          if (loading) { loading.style.display = 'none'; loading.setAttribute('aria-hidden', 'true'); }
+        } catch { /* Hosted Embed SDK is cross-origin. */ }
       }
     });
     return () => subscription.cancel();
@@ -142,14 +149,18 @@ export default function MatterportViewer({ modelId, importedFile }) {
         onLoad = async () => {
           try {
             setStatus('Connecting SDK…');
-            const bootstrap = 'https://static.matterport.com/showcase-sdk/bootstrap/3.1.0-0-g1cd7e0997a/sdk.es6.js';
-            const { connect } = await import(/* @vite-ignore */ `${bootstrap}?applicationKey=${encodeURIComponent(key)}`);
-            if (!active) return;
-            sdk = await connect(iframe);
+            if (config.matterportBundleUrl) {
+              sdk = await iframe.contentWindow.MP_SDK.connect(iframe.contentWindow);
+            } else {
+              const bootstrap = 'https://static.matterport.com/showcase-sdk/bootstrap/3.1.0-0-g1cd7e0997a/sdk.es6.js';
+              const { connect } = await import(/* @vite-ignore */ `${bootstrap}?applicationKey=${encodeURIComponent(key)}`);
+              if (!active) return;
+              sdk = await connect(iframe);
+            }
             if (!active) return;
             clearTimeout(timer);
             window.mpSdk = sdk;
-            setStatus('SDK connected');
+            setStatus(sdk.Scene?.createObjects ? 'Bundle SDK connected · 3D obstacles available' : 'Embed SDK connected · install Bundle SDK for 3D obstacles');
             setError('');
             subscription = sdk.Sweep.current.subscribe(current => {
               if (active) setSweep(current.sid ? { id: current.sid, floor: current.floorInfo?.sequence } : null);
@@ -180,7 +191,7 @@ export default function MatterportViewer({ modelId, importedFile }) {
           }
         };
         iframe.addEventListener('load', onLoad, { once: true });
-        iframe.src = `https://my.matterport.com/show/?m=${encodeURIComponent(modelId)}&play=1&applicationKey=${encodeURIComponent(key)}`;
+        iframe.src = `${config.matterportBundleUrl || 'https://my.matterport.com/show/'}?m=${encodeURIComponent(modelId)}&play=1&applicationKey=${encodeURIComponent(key)}`;
         timer = setTimeout(() => {
           if (active) setError('The viewer is taking longer than expected. Check your connection and model access, then retry.');
         }, 30000);
@@ -230,6 +241,8 @@ export default function MatterportViewer({ modelId, importedFile }) {
       {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })} onComplete={handleComplete}/>}
       {phase === 'returning' && <div className="return-prompt" role="status">All tasks complete — return to the entrance to finish the drill.</div>}
       {phase === 'debrief' && connectedSdk && <DrillDebrief sdk={connectedSdk} modelId={modelId} score={summary?.score} maxScore={summary?.maxScore} trail={debriefTrail.current} plan={plan} checkpoints={importedFile?.tasks} onClose={() => setPhase('done')}/>}
+      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })}/>}
+      {connectedSdk && !error && <ObstacleControls key={`obstacles-${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} interior={view === 'interior'} onShowViewer={() => frame.current?.scrollIntoView({ block: 'center' })}/>}
       <div className="viewer-stage">
         {viewError && <p className="error" role="alert">{viewError}</p>}
         <div className="viewer-viewport">

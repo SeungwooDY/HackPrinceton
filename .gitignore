@@ -6,3 +6,6 @@ out/
 
 # Large CoStar data files (local-only, not tracked on GitHub)
 costar-hackathon-kit/
+
+# Official Matterport Bundle SDK (install with npm run setup:bundle)
+public/bundle/

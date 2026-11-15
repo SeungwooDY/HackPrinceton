@@ -7,7 +7,7 @@ import mimetypes
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit, parse_qs
+from urllib.parse import urlsplit, parse_qs, unquote
 from vexcel import ImageryError, imagery_for_model, site_for_model
 
 ROOT = Path(__file__).resolve().parent
@@ -142,7 +142,15 @@ class Handler(BaseHTTPRequestHandler):
                     "error": "Set MATTER_PORT_SDK_KEY in .env, then refresh."
                 }).encode())
                 return
-            self.respond(200, "application/json", json.dumps({"matterportSdkKey": key}).encode())
+            self.respond(200, "application/json", json.dumps({"matterportSdkKey": key, "matterportBundleUrl": "/bundle/showcase.html" if (ROOT / "public/bundle/showcase.html").is_file() or (ROOT / "dist/bundle/showcase.html").is_file() else None}).encode())
+        elif path.startswith("/bundle/"):
+            relative = unquote(path[len("/bundle/"):])
+            for base in (ROOT / "public/bundle", ROOT / "dist/bundle"):
+                target = (base / relative).resolve()
+                if target.is_relative_to(base.resolve()) and target.is_file():
+                    self.respond(200, mimetypes.guess_type(target.name)[0] or "application/octet-stream", target.read_bytes())
+                    return
+            self.respond(404, "text/plain", b"Matterport bundle missing. Run npm run setup:bundle.")
         elif path in ("/api/aerial/site", "/api/aerial/image"):
             query = parse_qs(urlsplit(self.path).query)
             model_id = (query.get("model") or [""])[0]
