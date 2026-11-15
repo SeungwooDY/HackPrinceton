@@ -40,6 +40,11 @@ def usable_exits(graph: SweepGraph, blocked_exits: set[str]) -> list[tuple[str, 
     for e in graph.exits:
         if e.id in blocked_exits:
             continue
+        # Only exterior doors and egress windows are ways OUT of the building.
+        # Interior doors (bedroom/bathroom/closet) may be marked for other uses
+        # but are never valid egress, so they can't end or route the drill.
+        if e.type not in ("door", "window"):
+            continue
         if e.type == "window" and e.ladderReachable is False:
             continue
         out.append((e.id, e.sweepId))

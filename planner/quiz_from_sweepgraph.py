@@ -48,7 +48,7 @@ from plan import anchor_of  # noqa: E402
 OUT = ROOT / "out"
 
 
-def rooms_from_graph(graph, labels, floor=None):
+def rooms_from_graph(graph, labels, floor=None, labeled_only=False):
     """Ordered (room_id, label, anchor_sweep_id) for each real room, anchored
     to its centroid sweep (anchor_of) -- the same point the planner routes to.
 
@@ -67,6 +67,8 @@ def rooms_from_graph(graph, labels, floor=None):
     anchors = {}     # room_id -> centroid anchor sweep id
     room_floor = {}  # room_id -> floor of that anchor
     for rid in room_ids:
+        if labeled_only and rid not in labels:
+            continue  # only place checkpoints in rooms with a real captured label
         anchor = anchor_of(sweep_graph, rid)
         if anchor is None:
             continue
@@ -84,9 +86,9 @@ def rooms_from_graph(graph, labels, floor=None):
     return [(rid, label_of.get(rid) or "Unlabeled room", anchors[rid]) for rid in ordered]
 
 
-def build(graph, labels, limit, floor=None):
+def build(graph, labels, limit, floor=None, labeled_only=False):
     model_id = graph.get("modelId") or "unknown-model"
-    rooms = rooms_from_graph(graph, labels, floor)
+    rooms = rooms_from_graph(graph, labels, floor, labeled_only)
     if limit:
         rooms = rooms[:limit]
     assignment = assign_distinct((rid, label) for rid, label, _ in rooms)
@@ -116,12 +118,14 @@ def main():
     ap.add_argument("--max", type=int, default=0, help="cap number of checkpoints (0 = all)")
     ap.add_argument("--floor", type=int, default=None,
                     help="keep only rooms on this floor index (planner is same-floor)")
+    ap.add_argument("--labeled-only", action="store_true",
+                    help="only place checkpoints in rooms present in --labels (so every question matches its room)")
     args = ap.parse_args()
 
     graph = json.loads(Path(args.graph).read_text(encoding="utf-8"))
     labels = json.loads(Path(args.labels).read_text(encoding="utf-8")) if args.labels else {}
 
-    model_id, items = build(graph, labels, args.max, args.floor)
+    model_id, items = build(graph, labels, args.max, args.floor, args.labeled_only)
     OUT.mkdir(exist_ok=True)
     out_path = OUT / f"quiz_{model_id}.json"
     out_path.write_text(

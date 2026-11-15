@@ -49,6 +49,7 @@ CATEGORY_ALIASES = {
     "utility": "utility",
     "breakroom": "utility",
     "staircase": "hallway",
+    "landing": "hallway",
     "basement": "basement",
     "garage": "garage",
     "warehouse": "warehouse",
@@ -300,6 +301,13 @@ def category_for_label(label):
     for part in (label or "").split(","):
         key = part.strip().lower()
         if key in CATEGORY_ALIASES:
+            return CATEGORY_ALIASES[key]
+    # Fall back to a word/substring match so real room names like "Living Room"
+    # or "Master Bedroom" map to their category (the exact match above only
+    # catches "living" / "bedroom"). Longer alias keys win over shorter ones.
+    text = (label or "").lower()
+    for key in sorted(CATEGORY_ALIASES, key=len, reverse=True):
+        if key in text:
             return CATEGORY_ALIASES[key]
     return "generic"
 

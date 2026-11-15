@@ -21,10 +21,25 @@ from __future__ import annotations
 import json
 import math
 import os
+import ssl
 import urllib.error
 import urllib.request
 
 from generate_floor_tasks import load_env
+
+
+def _ssl_context():
+    """CA bundle for the HTTPS call to Gemini. python.org/pyenv macOS Python
+    ships no system trust store, so a bare urlopen raises
+    CERTIFICATE_VERIFY_FAILED; certifi fixes it (same issue as vexcel.py)."""
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:
+        return ssl.create_default_context()
+
+
+_SSL_CONTEXT = _ssl_context()
 
 GEMINI_MODEL = "gemini-3.8-flash"
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/interactions"
@@ -166,7 +181,7 @@ def _post(api_key, body):
             "Api-Revision": GEMINI_API_REVISION,
         },
     )
-    with urllib.request.urlopen(req, timeout=60) as resp:
+    with urllib.request.urlopen(req, timeout=60, context=_SSL_CONTEXT) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 

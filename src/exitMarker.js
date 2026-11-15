@@ -26,9 +26,12 @@ export function installExitMarker() {
   panel.innerHTML = `
     <div data-drag style="font-weight:600;margin-bottom:6px;cursor:move;user-select:none">⠿ Exit marker</div>
     <div data-cur style="opacity:.8;margin-bottom:8px">waiting for SDK…</div>
+    <div style="display:flex;gap:6px;margin-bottom:4px">
+      <button data-door style="flex:1">+ Exit door</button>
+      <button data-window style="flex:1">+ Exit window</button>
+    </div>
     <div style="display:flex;gap:6px;margin-bottom:8px">
-      <button data-door style="flex:1">+ Door</button>
-      <button data-window style="flex:1">+ Window</button>
+      <button data-interior style="flex:1">+ Interior door (not an exit)</button>
     </div>
     <ul data-list style="list-style:none;margin:0 0 8px;padding:0;max-height:120px;overflow:auto"></ul>
     <button data-export style="width:100%">Download graph + exits</button>`;
@@ -90,6 +93,10 @@ export function installExitMarker() {
 
   panel.querySelector("[data-door]").onclick = () => addExit("door");
   panel.querySelector("[data-window]").onclick = () => addExit("window");
+  // Interior doors are recorded but are NOT building exits: the planner ignores
+  // them for egress and the drill does not complete when you reach one. Only
+  // exterior doors / egress windows count as exits.
+  panel.querySelector("[data-interior]").onclick = () => addExit("interior-door");
   listEl.onclick = (ev) => {
     const i = ev.target?.dataset?.del;
     if (i != null) {

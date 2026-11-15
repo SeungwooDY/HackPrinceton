@@ -104,10 +104,11 @@ def route_plan_for_model(model_id):
     return {
         "drillId": rp.drillId, "feasible": rp.feasible, "order": rp.order,
         "exitId": rp.exitId, "exitSweepId": exit_sweep,
-        # Every marked exit's sweep, not just the one the optimal route ends
-        # at -- "returning to finish" should accept whichever real door the
-        # trainee actually walks out of, not only the solver's chosen one.
-        "exitSweepIds": [e.sweepId for e in graph.exits],
+        # Every real egress sweep (exterior door / window), not just the one the
+        # optimal route ends at -- "returning to finish" should accept whichever
+        # real exit the trainee walks out of. Interior doors are excluded: they
+        # aren't exits and must not end the drill.
+        "exitSweepIds": [e.sweepId for e in graph.exits if e.type in ("door", "window")],
         "totalMeters": rp.totalMeters, "unreachable": rp.unreachable,
         "legs": [{"from": lg.frm, "to": lg.to, "sweeps": lg.sweeps,
                   "meters": lg.meters, "carrying": lg.carrying} for lg in rp.legs],
