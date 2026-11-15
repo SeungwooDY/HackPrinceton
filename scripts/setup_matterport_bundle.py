@@ -1,31 +1,52 @@
 #!/usr/bin/env python3
-"""Install a pinned official Matterport Bundle SDK into public/bundle."""
-from io import BytesIO
+"""Copy the pinned official Matterport npm assets; never download at build time."""
+import json
 from pathlib import Path
-from urllib.request import urlopen
-from zipfile import ZipFile
+import shutil
+import tempfile
 
-URL = 'https://static.matterport.com/showcase-sdk/bundle/26.5.4_webgl-708-g332adb66f5/showcase-bundle.zip'
 ROOT = Path(__file__).resolve().parents[1]
+PACKAGE = '@matterport/webcomponent'
+REQUIRED = ('showcase.html', 'version.txt', 'js/showcase.js', 'css/showcase.css',
+            'sdk/sdk-client.js', 'vendors/three/0.184.0/three.module.min.js')
+
+
+def install_bundle(source, target):
+    """Validate first, then replace the generated directory without mixing versions."""
+    missing = [name for name in REQUIRED if not (source / name).is_file()]
+    if missing:
+        raise ValueError('Matterport npm package is missing required SDK assets: ' + ', '.join(missing))
+    version = (source / 'version.txt').read_text(encoding='utf-8').strip()
+    if not version:
+        raise ValueError('Matterport npm package has an empty SDK version.')
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.bundle-install-', dir=target.parent) as directory:
+        staging = Path(directory) / 'new'
+        backup = Path(directory) / 'previous'
+        shutil.copytree(source, staging)
+        if target.exists():
+            target.rename(backup)
+        try:
+            staging.rename(target)
+        except OSError:
+            if backup.exists():
+                backup.rename(target)
+            raise
+    return version
 
 
 def main():
-    target = ROOT / 'public/bundle'
-    if (target / 'showcase.html').is_file() and (target / 'version.txt').is_file() and (target / 'version.txt').read_text().strip() == '26.5.4_webgl-708-g332adb66f5':
-        print('Pinned Matterport Bundle SDK is already installed.')
-        return
-    with urlopen(URL, timeout=60) as response:
-        archive = response.read(100 * 1024 * 1024 + 1)
-    if len(archive) > 100 * 1024 * 1024:
-        raise ValueError('SDK archive exceeds the download limit.')
-    with ZipFile(BytesIO(archive)) as bundle:
-        for entry in bundle.infolist():
-            if not (target / entry.filename).resolve().is_relative_to(target.resolve()):
-                raise ValueError('SDK archive contains an invalid path.')
-        bundle.extractall(target)
-    if not (target / 'showcase.html').is_file():
-        raise ValueError('SDK archive is missing showcase.html.')
-    print(f'Installed Matterport Bundle SDK into {target}')
+    package_dir = ROOT / 'node_modules' / PACKAGE
+    metadata = package_dir / 'package.json'
+    if not metadata.is_file():
+        raise SystemExit('Matterport SDK dependency is missing. Run npm ci (or npm install), then npm run setup:bundle.')
+    installed = json.loads(metadata.read_text(encoding='utf-8'))['version']
+    project = json.loads((ROOT / 'package.json').read_text(encoding='utf-8'))
+    pinned = project['devDependencies'][PACKAGE]
+    if installed != pinned:
+        raise SystemExit(f'Matterport SDK version mismatch: installed {installed}, expected {pinned}. Run npm ci.')
+    version = install_bundle(package_dir / 'built-bundle', ROOT / 'public/bundle')
+    print(f'Installed Matterport SDK {version} from {PACKAGE}@{installed} (local npm assets; no HTTP download).')
 
 
 if __name__ == '__main__':

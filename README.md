@@ -169,5 +169,13 @@ with meter-based extents and attribution enabled. Run backend checks with
 
 ## Vercel deployment
 
+Use `npm run build:vercel` as the build command and `dist` as the output
+directory. Leave Vercel's npm install step enabled, including dev dependencies.
+The build copies SDK assets from the pinned `@matterport/webcomponent` npm
+package into `public/bundle` before running Vite; it does not download the
+Matterport ZIP. Commit both `package.json` and `package-lock.json` along with
+`scripts/setup_matterport_bundle.py` before redeploying. For a local check, run
+`npm ci` followed by `npm run build:vercel`.
+
 See [DEPLOYMENT.md](DEPLOYMENT.md) for the Python API routing, required environment
 variables, SDK build, and files that must be committed before redeploying.

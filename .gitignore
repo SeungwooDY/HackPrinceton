@@ -9,3 +9,5 @@ costar-hackathon-kit/
 
 # Official Matterport Bundle SDK (install with npm run setup:bundle)
 public/bundle/
+.vercel
+.env*
