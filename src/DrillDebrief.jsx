@@ -18,11 +18,12 @@ function dedupe(sweeps) {
   return sweeps.filter((sid, i) => sid && (i === 0 || sid !== sweeps[i - 1]));
 }
 
-export default function DrillDebrief({ sdk, modelId, score, maxScore, trail, plan: planProp, checkpoints, onClose }) {
+export default function DrillDebrief({ sdk, modelId, score, maxScore, answers, trail, plan: planProp, checkpoints, onClose }) {
   const noteFor = p => (p.feasible ? '' : (p.error || 'Optimal route unavailable.'));
   const [plan, setPlan] = useState(planProp || null);
   const [note, setNote] = useState(() => (planProp ? noteFor(planProp) : 'Loading optimal route…'));
   const [playing, setPlaying] = useState(null); // 'yours' | 'optimal' | null
+  const [coach, setCoach] = useState({ status: 'loading', suggestions: [], trace: [] });
   const cancel = useRef(false);
 
   // checkpoints[].title is the order-blind "Checkpoint N" label the trainee
@@ -49,6 +50,31 @@ export default function DrillDebrief({ sdk, modelId, score, maxScore, trail, pla
   }, [trail, checkpointsById]);
 
   const optimalOrder = plan?.feasible ? plan.order : null;
+
+  // Multi-step coach: the server runs a tool-calling agent (debrief_agent.py)
+  // that investigates path efficiency / order / quiz mistakes and decides
+  // itself which are worth looking at, then writes suggestions. "trace" is
+  // the agent's own record of which tools it chose to call -- shown below so
+  // the reasoning is visible, not just the final answer.
+  useEffect(() => {
+    if (!answers?.length) { setCoach({ status: 'unavailable', suggestions: [], trace: [] }); return undefined; }
+    let live = true;
+    setCoach({ status: 'loading', suggestions: [], trace: [] });
+    fetch('/api/debrief-analysis', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ modelId, trail, yourOrder, answers }),
+    })
+      .then(r => r.json())
+      .then(result => {
+        if (!live) return;
+        setCoach({
+          status: result.error ? 'error' : 'ready',
+          suggestions: result.suggestions || [], trace: result.trace || [],
+        });
+      })
+      .catch(() => { if (live) setCoach({ status: 'error', suggestions: [], trace: [] }); });
+    return () => { live = false; };
+  }, [modelId, answers]); // eslint-disable-line -- trail/yourOrder are stable for one completed drill
 
   useEffect(() => {
     if (planProp) { setPlan(planProp); setNote(noteFor(planProp)); return undefined; }
@@ -114,6 +140,24 @@ export default function DrillDebrief({ sdk, modelId, score, maxScore, trail, pla
           <button disabled={!trail.length} onClick={() => play('yours')}>{playing === 'yours' ? 'Stop' : 'Replay your run'}</button>
           <button disabled={!plan?.feasible} onClick={() => play('optimal')}>{playing === 'optimal' ? 'Stop' : 'Replay optimal'}</button>
         </div>
+        {coach.status !== 'unavailable' && (
+          <div className="debrief-coach">
+            <h3>Coach</h3>
+            {coach.status === 'loading' && <p className="debrief-note">Analyzing your run…</p>}
+            {coach.status === 'error' && <p className="debrief-note">Coach analysis unavailable.</p>}
+            {coach.status === 'ready' && (
+              coach.suggestions.length
+                ? <ul className="debrief-suggestions">{coach.suggestions.map((s, i) => <li key={i}>{s}</li>)}</ul>
+                : <p className="debrief-note">No suggestions.</p>
+            )}
+            {coach.trace.length > 0 && (
+              <details className="debrief-trace">
+                <summary>Agent's investigation ({coach.trace.length} tool{coach.trace.length === 1 ? '' : 's'} called)</summary>
+                <ol>{coach.trace.map((step, i) => <li key={i}><code>{step.tool}</code></li>)}</ol>
+              </details>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

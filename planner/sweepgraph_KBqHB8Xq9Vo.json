@@ -1,6 +1,6 @@
 {
   "modelId": "KBqHB8Xq9Vo",
-  "_note": "Exported from Showcase SDK Sweep.data. neighbors are RAW — may include sightline/cross-floor edges; filter at graph-build time. exits[] is empty: add doors/windows by hand (SDK has no exit concept).",
+  "_note": "Exported from Showcase SDK Sweep.data. neighbors are RAW \u2014 may include sightline/cross-floor edges; filter at graph-build time. exits[] is empty: add doors/windows by hand (SDK has no exit concept).",
   "sweeps": [
     {
       "id": "nhb5bq6qcwb1ddke61z3sm1ha",
@@ -1249,15 +1249,45 @@
   ],
   "exits": [
     {
-      "id": "door-1",
-      "type": "door",
-      "sweepId": "ay2en03kqe1umkxazu17umzha",
+      "id": "window-1",
+      "type": "interior-door",
+      "sweepId": "nhb5bq6qcwb1ddke61z3sm1ha",
       "unitId": "KBqHB8Xq9Vo"
     },
     {
       "id": "door-2",
       "type": "door",
+      "sweepId": "6npqr0asswqctfaqhdy416hdd",
+      "unitId": "KBqHB8Xq9Vo"
+    },
+    {
+      "id": "door-3",
+      "type": "interior-door",
+      "sweepId": "ay2en03kqe1umkxazu17umzha",
+      "unitId": "KBqHB8Xq9Vo"
+    },
+    {
+      "id": "door-4",
+      "type": "interior-door",
       "sweepId": "0k1cy02x20ha1m3r3qs1772wc",
+      "unitId": "KBqHB8Xq9Vo"
+    },
+    {
+      "id": "door-5",
+      "type": "interior-door",
+      "sweepId": "iq0fd07z4qsd9rengqcbde9da",
+      "unitId": "KBqHB8Xq9Vo"
+    },
+    {
+      "id": "door-6",
+      "type": "interior-door",
+      "sweepId": "s60mg3tind7ek6n5bi41nrhua",
+      "unitId": "KBqHB8Xq9Vo"
+    },
+    {
+      "id": "door-7",
+      "type": "interior-door",
+      "sweepId": "6tt9pzqa7rt71z3ba9in3tm2b",
       "unitId": "KBqHB8Xq9Vo"
     }
   ]

@@ -8,6 +8,7 @@ import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs, unquote
+from debrief_agent import run_debrief_agent
 from vexcel import ImageryError, imagery_for_model, site_for_model
 
 ROOT = Path(__file__).resolve().parent
@@ -103,6 +104,11 @@ def route_plan_for_model(model_id):
     return {
         "drillId": rp.drillId, "feasible": rp.feasible, "order": rp.order,
         "exitId": rp.exitId, "exitSweepId": exit_sweep,
+        # Every real egress sweep (exterior door / window), not just the one the
+        # optimal route ends at -- "returning to finish" should accept whichever
+        # real exit the trainee walks out of. Interior doors are excluded: they
+        # aren't exits and must not end the drill.
+        "exitSweepIds": [e.sweepId for e in graph.exits if e.type in ("door", "window")],
         "totalMeters": rp.totalMeters, "unreachable": rp.unreachable,
         "legs": [{"from": lg.frm, "to": lg.to, "sweeps": lg.sweeps,
                   "meters": lg.meters, "carrying": lg.carrying} for lg in rp.legs],
@@ -196,6 +202,33 @@ class Handler(BaseHTTPRequestHandler):
                 self.respond(404, "text/plain", b"Not found")
         else:
             self.respond(404, "text/plain", b"Not found")
+
+    def do_POST(self):
+        path = urlsplit(self.path).path
+        if path != "/api/debrief-analysis":
+            self.respond(404, "text/plain", b"Not found")
+            return
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+            payload = json.loads(self.rfile.read(length).decode("utf-8")) if length else {}
+            model_id = payload.get("modelId")
+            trail = payload.get("trail") or []
+            your_order = payload.get("yourOrder") or []
+            answers = payload.get("answers") or []
+            if not model_id:
+                self.respond(400, "application/json", json.dumps({"error": "modelId required"}).encode())
+                return
+            try:
+                plan = route_plan_for_model(model_id)
+            except Exception as e:
+                plan = {"feasible": False, "error": str(e)[:300]}
+            quiz_items = quiz_items_for_model(model_id)
+            optimal_order = plan.get("order") if plan.get("feasible") else None
+            result = run_debrief_agent(plan, quiz_items, trail, your_order, optimal_order, answers)
+        except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as e:
+            self.respond(400, "application/json", json.dumps({"error": f"bad request: {e}"[:300]}).encode())
+            return
+        self.respond(200, "application/json", json.dumps(result).encode())
 
     def respond(self, status, content_type, body):
         self.send_response(status)

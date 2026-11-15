@@ -82,20 +82,40 @@ export default function MatterportViewer({ modelId, importedFile }) {
   }, [modelId]);
 
   // Record the trainee's path (one entry per distinct sweep), and once they're
-  // in the "returning" phase, complete the drill when they reach the exit sweep.
+  // in the "returning" phase, complete the drill once they reach ANY marked
+  // exit -- not just the one the optimal route happens to end at. A model can
+  // have several real doors; the trainee should be free to leave through
+  // whichever one they actually walk back to.
   useEffect(() => {
     if (!connectedSdk) return undefined;
+    // Sweep.current doesn't reliably carry a position (its shape also differs
+    // between the Embed and Bundle SDKs), but Sweep.data does -- the same source
+    // the exporter uses. Keep a sweepId -> {x,y,z} map so the recorded trail
+    // always has coordinates for the route-distance / efficiency math (both the
+    // debrief stats and the server's path_efficiency tool read trail positions).
+    const posMap = new Map();
+    let dataSub;
+    if (connectedSdk.Sweep?.data?.subscribe) {
+      dataSub = connectedSdk.Sweep.data.subscribe({
+        onCollectionUpdated(collection) {
+          for (const s of Object.values(collection || {})) {
+            if (s?.sid && s.position) posMap.set(s.sid, { x: s.position.x, y: s.position.y, z: s.position.z });
+          }
+        },
+      });
+    }
     const sub = connectedSdk.Sweep.current.subscribe(cur => {
       if (!cur?.sid) return;
       const last = trail.current[trail.current.length - 1];
-      if (!last || last.sweepId !== cur.sid) trail.current.push({ sweepId: cur.sid, position: cur.position, t: Date.now() });
-      if (phaseRef.current === 'returning' && exitSweepRef.current && cur.sid === exitSweepRef.current) {
+      const position = posMap.get(cur.sid) || cur.position || null;
+      if (!last || last.sweepId !== cur.sid) trail.current.push({ sweepId: cur.sid, position, t: Date.now() });
+      if (phaseRef.current === 'returning' && exitSweepRef.current?.has(cur.sid)) {
         debriefTrail.current = trail.current.slice();
         phaseRef.current = 'debrief';
         setPhase('debrief');
       }
     });
-    return () => sub?.cancel?.();
+    return () => { sub?.cancel?.(); dataSub?.cancel?.(); };
   }, [connectedSdk]);
 
   // All questions answered -> enter "returning" and fetch the route's exit sweep.
@@ -112,7 +132,8 @@ export default function MatterportViewer({ modelId, importedFile }) {
       .then(p => {
         if (!live) return;
         setPlan(p);
-        exitSweepRef.current = p.exitSweepId || null;
+        const exits = (p.exitSweepIds?.length ? p.exitSweepIds : [p.exitSweepId]).filter(Boolean);
+        exitSweepRef.current = exits.length ? new Set(exits) : null;
         // No exit to return to -> finish immediately.
         if (!exitSweepRef.current) {
           debriefTrail.current = trail.current.slice();
@@ -240,8 +261,7 @@ export default function MatterportViewer({ modelId, importedFile }) {
       {error && <p className="error" role="alert">{error}</p>}
       {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })} onComplete={handleComplete}/>}
       {phase === 'returning' && <div className="return-prompt" role="status">All tasks complete — return to the entrance to finish the drill.</div>}
-      {phase === 'debrief' && connectedSdk && <DrillDebrief sdk={connectedSdk} modelId={modelId} score={summary?.score} maxScore={summary?.maxScore} trail={debriefTrail.current} plan={plan} checkpoints={importedFile?.tasks} onClose={() => setPhase('done')}/>}
-      {connectedSdk && !error && <ModelTags key={`${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} importedFile={importedFile} overlayTarget={overlayTarget} onShowViewer={() => frame.current?.scrollIntoView({ block: 'start' })}/>}
+      {phase === 'debrief' && connectedSdk && <DrillDebrief sdk={connectedSdk} modelId={modelId} score={summary?.score} maxScore={summary?.maxScore} answers={summary?.answers} trail={debriefTrail.current} plan={plan} checkpoints={importedFile?.tasks} onClose={() => setPhase('done')}/>}
       {connectedSdk && !error && <ObstacleControls key={`obstacles-${modelId}-${retry}`} sdk={connectedSdk} modelId={modelId} interior={view === 'interior'} onShowViewer={() => frame.current?.scrollIntoView({ block: 'center' })}/>}
       <div className="viewer-stage">
         {viewError && <p className="error" role="alert">{viewError}</p>}
