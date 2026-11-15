@@ -287,6 +287,13 @@ button:disabled { cursor: default; opacity: .5; }
 .debrief-order ol { margin: 0; padding-left: 20px; font-size: 13px; }
 .debrief-order li { margin: 2px 0; }
 .debrief-order .debrief-start { color: #785b42; font-style: italic; list-style: none; margin-left: -20px; }
+.debrief-coach { margin-top: 16px; padding-top: 12px; border-top: 1px solid #e3dbcd; }
+.debrief-coach h3 { margin: 0 0 8px; font-size: 13px; color: #785b42; }
+.debrief-suggestions { margin: 0; padding-left: 20px; font-size: 13px; }
+.debrief-suggestions li { margin: 0 0 8px; }
+.debrief-trace { margin-top: 8px; font-size: 12px; color: #8a7763; }
+.debrief-trace ol { margin: 4px 0 0; padding-left: 20px; }
+.debrief-trace code { background: #f1e9df; padding: 1px 5px; border-radius: 3px; }
 .debrief-note { color: #8b562c; background: #f7ead8; border-left: 2px solid #c3996c; padding: 8px 10px; font-size: 13px; margin: 0 0 16px; }
 .debrief-actions { display: flex; gap: 8px; }
 .debrief-actions button { flex: 1; padding: 10px; border: 1px solid #8b633e; background: #986b42; color: #fffdf8; border-radius: 4px; cursor: pointer; }

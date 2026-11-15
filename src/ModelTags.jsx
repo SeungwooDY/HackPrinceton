@@ -39,12 +39,27 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
   }
 
   async function installTag(tag) {
-    const [sdkId] = await sdk.Tag.add({
-      label: tag.label, description: tag.description,
-      anchorPosition: tag.anchorPosition, stemVector: tag.stemVector,
-      color: tag.importedTask ? { r: 0.25, g: 0.45, b: 0.8 } : { r: 0.7, g: 0.55, b: 0.35 },
-    });
-    if (!sdkId) throw new Error('No tag ID returned.');
+    // Claim this tag.id BEFORE awaiting Tag.add, not after -- the autoActivate
+    // effect can re-run (sweeps streams in over several debounced ticks)
+    // while a previous call for the same tag is still in flight, and without
+    // this guard both calls race Tag.add concurrently for the same tag. That
+    // corrupts the SDK's internal transaction bookkeeping (observed as
+    // "this.transactions[t] is not a function" in showcase.js) and leaves
+    // click handling broken afterward.
+    if (runtime.current.has(tag.id)) return runtime.current.get(tag.id);
+    runtime.current.set(tag.id, null);
+    let sdkId;
+    try {
+      [sdkId] = await sdk.Tag.add({
+        label: tag.label, description: tag.description,
+        anchorPosition: tag.anchorPosition, stemVector: tag.stemVector,
+        color: tag.importedTask ? { r: 0.25, g: 0.45, b: 0.8 } : { r: 0.7, g: 0.55, b: 0.35 },
+      });
+    } catch (e) {
+      runtime.current.delete(tag.id); // free the claim so a later retry isn't blocked forever
+      throw e;
+    }
+    if (!sdkId) { runtime.current.delete(tag.id); throw new Error('No tag ID returned.'); }
     if (!alive.current) { await sdk.Tag.remove(sdkId); return null; }
     runtime.current.set(tag.id, sdkId);
     // Imported/quiz checkpoints get a visible native marker (tag.label is the
@@ -204,10 +219,18 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
     // reload (when initialize() restores + installs them). Guard on
     // runtime.current so a re-run (sweeps stream in over several ticks) or a
     // reload that already installed from localStorage doesn't double-add.
-    for (const tag of additions) {
-      if (runtime.current.has(tag.id)) continue;
-      installTag(tag).catch(() => {});
-    }
+    // Installed ONE AT A TIME (awaited), not fired concurrently: a model with
+    // many checkpoints (e.g. 15) firing that many sdk.Tag.add() calls at once,
+    // right as the Bundle SDK is still mid-startup, is what was corrupting its
+    // internal transaction bookkeeping ("this.transactions[t] is not a
+    // function") and losing some checkpoints entirely.
+    (async () => {
+      for (const tag of additions) {
+        if (!alive.current) return;
+        if (runtime.current.has(tag.id)) continue;
+        try { await installTag(tag); } catch { /* best effort; one bad marker shouldn't stop the rest */ }
+      }
+    })();
     const first = saved.current.find(tag => tag.id === available[0].task.id);
     if (first && !activatedDemo.current.navigated) {activatedDemo.current.navigated = true;goToTask(first);}
   }, [importedFile, busy, sweeps, modelId]);
@@ -236,6 +259,12 @@ export default function ModelTags({ sdk, modelId, importedFile, onShowViewer, ov
         score: quizTags.reduce((sum, tag) => sum + (tag.quizPoints ?? 0), 0),
         maxScore: quizTags.length * 3,
         count: quizTags.length,
+        // Per-checkpoint detail for the debrief agent -- taskId is the plain
+        // "q1"/"q2" id (see taskImport.js's source.taskId), matching what the
+        // solver uses, not tag.id (a long composite dedup string).
+        answers: quizTags.map(tag => ({
+          checkpointId: tag.importedTask?.taskId, points: tag.quizPoints ?? 0,
+        })).filter(a => a.checkpointId),
       });
     }
   }, [tags, onComplete]);
